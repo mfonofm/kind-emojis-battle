@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 # Kind Emojis Battle! 🎮
 
 A two-player emoji battle game for kids. Pick kind emojis and throw them over the wall!
