@@ -620,7 +620,12 @@ function CharSelectScreen({ playerNum, takenConfig, onSelect, onBack }) {
   const [mode, setMode] = useState("choose");
   const [customChars, setCustomChars] = useState([]);
 
-  if (mode === "create")
+  const allChars = [...customChars];
+
+  // Auto-enter create mode when no characters exist
+  const effectiveMode = allChars.length === 0 ? "create" : mode;
+
+  if (effectiveMode === "create")
     return (
       <CharacterCreator
         onDone={(cfg) => {
@@ -634,11 +639,12 @@ function CharSelectScreen({ playerNum, takenConfig, onSelect, onBack }) {
           setCustomChars((prev) => [...prev, newChar]);
           setMode("choose");
         }}
-        onBack={() => setMode("choose")}
+        onBack={() => {
+          if (allChars.length > 0) setMode("choose");
+          else onBack();
+        }}
       />
     );
-
-  const allChars = [...customChars];
 
   return (
     <div
