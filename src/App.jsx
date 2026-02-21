@@ -26,12 +26,12 @@ const SPEED_MULTIPLIERS = [0.25, 0.4, 0.6, 0.8, 1.0];
 const LEVELS = [
   {
     name: "Disco Party",
-    emoji: "🪩",
+    emoji: "🌟",
     bg: "linear-gradient(135deg, #1a0533 0%, #2d1b69 50%, #4a1a7a 100%)",
     wallColor: "#c084fc",
     wallPattern:
       "repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(255,255,255,0.1) 8px, rgba(255,255,255,0.1) 16px)",
-    particles: ["✨", "🪩"],
+    particles: ["✨", "🌟"],
   },
   {
     name: "The Park",
@@ -82,10 +82,10 @@ const KIND_EMOJIS = [
   "🌈",
   "💝",
   "😇",
-  "🫶",
+  "🤝",
 ];
 const MEAN_EMOJIS = ["😡", "👎", "💢", "😤", "🙄", "😒", "💔", "👊"];
-const NEUTRAL_EMOJIS = ["😐", "🔵", "🟡", "⚪", "🫥", "😶", "🤷", "💭"];
+const NEUTRAL_EMOJIS = ["😐", "🔵", "🟡", "⚪", "😑", "😶", "🤷", "💭"];
 const TURN_TIME = 10;
 const WIN_SCORE = 10;
 
