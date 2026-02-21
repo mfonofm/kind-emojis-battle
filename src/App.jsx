@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import CustomCharacter, {
-  PRESETS,
   DEFAULT_CONFIG,
   SKIN_TONES,
   HAIR_COLORS,
   HAIR_STYLES,
   OUTFIT_STYLES,
   OUTFIT_COLORS,
+  ACCESSORIES,
 } from "./CustomCharacter.jsx";
 import {
   playKind,
@@ -342,6 +342,12 @@ function CharacterCreator({ onDone, onBack }) {
       options: OUTFIT_COLORS,
       type: "color",
     },
+    {
+      label: "Accessory",
+      key: "accessory",
+      options: ACCESSORIES,
+      type: "text",
+    },
     { label: "Name", key: "name", type: "name" },
   ];
   const cur = steps[step];
@@ -613,6 +619,7 @@ function CharacterCreator({ onDone, onBack }) {
 function CharSelectScreen({ playerNum, takenConfig, onSelect, onBack }) {
   const [mode, setMode] = useState("choose");
   const [customChars, setCustomChars] = useState([]);
+
   if (mode === "create")
     return (
       <CharacterCreator
@@ -630,7 +637,9 @@ function CharSelectScreen({ playerNum, takenConfig, onSelect, onBack }) {
         onBack={() => setMode("choose")}
       />
     );
-  const allChars = [...PRESETS, ...customChars];
+
+  const allChars = [...customChars];
+
   return (
     <div
       style={{
@@ -642,7 +651,7 @@ function CharSelectScreen({ playerNum, takenConfig, onSelect, onBack }) {
         alignItems: "center",
         justifyContent: "center",
         fontFamily: "'Fredoka', 'Nunito', sans-serif",
-        overflow: "hidden",
+        overflow: "auto",
         padding: "20px 16px",
       }}
     >
@@ -667,73 +676,77 @@ function CharSelectScreen({ playerNum, takenConfig, onSelect, onBack }) {
           fontFamily: "'Nunito', sans-serif",
         }}
       >
-        Choose a character or create your own
+        {allChars.length > 0
+          ? "Choose a character or create a new one"
+          : "Create your character!"}
       </div>
-      <div
-        style={{
-          display: "flex",
-          gap: 12,
-          flexWrap: "wrap",
-          justifyContent: "center",
-          maxWidth: 460,
-          marginBottom: 16,
-        }}
-      >
-        {allChars.map((p) => {
-          const taken = takenConfig && takenConfig.name === p.name;
-          return (
-            <div
-              key={p.id}
-              onClick={() => {
-                if (!taken) {
-                  playSelect();
-                  onSelect({
-                    config: p.config,
-                    color: p.color,
-                    isToddler: p.isToddler,
-                  });
-                }
-              }}
-              style={{
-                textAlign: "center",
-                padding: "12px 10px",
-                borderRadius: 20,
-                background: taken
-                  ? "rgba(255,255,255,0.05)"
-                  : "rgba(255,255,255,0.12)",
-                border: taken
-                  ? "2px solid rgba(255,255,255,0.1)"
-                  : `2px solid ${p.color}60`,
-                cursor: taken ? "not-allowed" : "pointer",
-                opacity: taken ? 0.35 : 1,
-                minWidth: 85,
-              }}
-            >
-              <CustomCharacter
-                config={p.config}
-                size={68}
-                isToddler={p.isToddler}
-              />
+      {allChars.length > 0 && (
+        <div
+          style={{
+            display: "flex",
+            gap: 12,
+            flexWrap: "wrap",
+            justifyContent: "center",
+            maxWidth: 460,
+            marginBottom: 16,
+          }}
+        >
+          {allChars.map((p) => {
+            const taken = takenConfig && takenConfig.name === p.name;
+            return (
               <div
+                key={p.id}
+                onClick={() => {
+                  if (!taken) {
+                    playSelect();
+                    onSelect({
+                      config: p.config,
+                      color: p.color,
+                      isToddler: p.isToddler,
+                    });
+                  }
+                }}
                 style={{
-                  color: "#fff",
-                  fontWeight: 700,
-                  fontSize: 13,
-                  marginTop: 2,
-                  fontFamily: "'Fredoka', sans-serif",
+                  textAlign: "center",
+                  padding: "12px 10px",
+                  borderRadius: 20,
+                  background: taken
+                    ? "rgba(255,255,255,0.05)"
+                    : "rgba(255,255,255,0.12)",
+                  border: taken
+                    ? "2px solid rgba(255,255,255,0.1)"
+                    : `2px solid ${p.color}60`,
+                  cursor: taken ? "not-allowed" : "pointer",
+                  opacity: taken ? 0.35 : 1,
+                  minWidth: 85,
                 }}
               >
-                {p.name}
-              </div>
-              {taken && (
-                <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 10 }}>
-                  Taken
+                <CustomCharacter
+                  config={p.config}
+                  size={68}
+                  isToddler={p.isToddler}
+                />
+                <div
+                  style={{
+                    color: "#fff",
+                    fontWeight: 700,
+                    fontSize: 13,
+                    marginTop: 2,
+                    fontFamily: "'Fredoka', sans-serif",
+                  }}
+                >
+                  {p.name}
                 </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
+                {taken && (
+                  <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 10 }}>
+                    Taken
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
       <button
         onClick={() => {
           playClick();
@@ -752,27 +765,29 @@ function CharSelectScreen({ playerNum, takenConfig, onSelect, onBack }) {
           marginBottom: 12,
         }}
       >
-        ✨ Create Your Own ✨
+        {"\u2728"} Create Character {"\u2728"}
       </button>
-      <button
-        onClick={() => {
-          playClick();
-          onBack();
-        }}
-        style={{
-          padding: "8px 24px",
-          fontSize: 14,
-          fontWeight: 600,
-          fontFamily: "'Fredoka', sans-serif",
-          background: "rgba(255,255,255,0.15)",
-          color: "#fff",
-          border: "1px solid rgba(255,255,255,0.3)",
-          borderRadius: 30,
-          cursor: "pointer",
-        }}
-      >
-        ← Back
-      </button>
+      {allChars.length > 0 && (
+        <button
+          onClick={() => {
+            playClick();
+            onBack();
+          }}
+          style={{
+            padding: "8px 24px",
+            fontSize: 14,
+            fontWeight: 600,
+            fontFamily: "'Fredoka', sans-serif",
+            background: "rgba(255,255,255,0.15)",
+            color: "#fff",
+            border: "1px solid rgba(255,255,255,0.3)",
+            borderRadius: 30,
+            cursor: "pointer",
+          }}
+        >
+          {"\u2190"} Back
+        </button>
+      )}
     </div>
   );
 }
@@ -1107,6 +1122,7 @@ export default function KindEmojisBattle() {
             animation: "titlePulse 3s ease-in-out infinite",
             textAlign: "center",
             zIndex: 2,
+            marginBottom: 20,
           }}
         >
           <div
@@ -1128,21 +1144,78 @@ export default function KindEmojisBattle() {
               fontWeight: 700,
               color: "#FFD700",
               fontFamily: "'Fredoka', sans-serif",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 4,
             }}
           >
-            ⚔️ Battle! ⚔️
+            <span
+              style={{
+                position: "relative",
+                display: "inline-block",
+                width: "1.4em",
+                height: "1.2em",
+              }}
+            >
+              <span
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  fontSize: "0.7em",
+                }}
+              >
+                😍
+              </span>
+              <span
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  fontSize: "0.84em",
+                  opacity: 0.7,
+                }}
+              >
+                ⚔️
+              </span>
+            </span>
+            Battle!
+            <span
+              style={{
+                position: "relative",
+                display: "inline-block",
+                width: "1.4em",
+                height: "1.2em",
+              }}
+            >
+              <span
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  fontSize: "0.7em",
+                }}
+              >
+                😍
+              </span>
+              <span
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  fontSize: "0.84em",
+                  opacity: 0.7,
+                }}
+              >
+                ⚔️
+              </span>
+            </span>
           </div>
-        </div>
-        <div style={{ display: "flex", gap: 8, margin: "24px 0", zIndex: 2 }}>
-          {PRESETS.map((p) => (
-            <div key={p.id}>
-              <CustomCharacter
-                config={p.config}
-                size={50}
-                isToddler={p.isToddler}
-              />
-            </div>
-          ))}
         </div>
         <div
           style={{
@@ -1155,9 +1228,8 @@ export default function KindEmojisBattle() {
             fontFamily: "'Nunito', sans-serif",
           }}
         >
-          Throw kind emojis over the wall! Pick 3 emojis each turn — kind ones
-          earn points, mean ones lose points. First to 10 wins! ⏱ 10 seconds per
-          turn!
+          Throw kind emojis over the wall! Pick 3 emojis each turn. Kind ones
+          earn points, mean ones lose points. First to 10 wins!
         </div>
         <button
           onClick={startGame}

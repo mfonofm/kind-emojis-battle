@@ -6,18 +6,11 @@
 let audioCtx = null;
 
 function getCtx() {
-  if (!audioCtx)
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   return audioCtx;
 }
 
-function playTone(
-  freq,
-  duration,
-  type = "sine",
-  volume = 0.3,
-  rampDown = true,
-) {
+function playTone(freq, duration, type = "sine", volume = 0.3, rampDown = true) {
   try {
     const ctx = getCtx();
     const osc = ctx.createOscillator();
@@ -25,8 +18,7 @@ function playTone(
     osc.type = type;
     osc.frequency.setValueAtTime(freq, ctx.currentTime);
     gain.gain.setValueAtTime(volume, ctx.currentTime);
-    if (rampDown)
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    if (rampDown) gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
     osc.connect(gain);
     gain.connect(ctx.destination);
     osc.start();

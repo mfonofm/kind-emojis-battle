@@ -40,12 +40,13 @@ export const HAIR_STYLES = [
 
 export const OUTFIT_STYLES = [
   { id: "dress", name: "Dress" },
+  { id: "puffy_dress", name: "Puffy Dress" },
   { id: "ballgown", name: "Ball Gown" },
+  { id: "tutu", name: "Tutu" },
   { id: "top_shorts", name: "Top & Shorts" },
   { id: "top_trousers", name: "Top & Trousers" },
   { id: "astronaut", name: "Astronaut" },
-  { id: "superhero", name: "Superhero Cape" },
-  { id: "tutu", name: "Tutu" },
+  { id: "superhero", name: "Superhero" },
 ];
 
 export const OUTFIT_COLORS = [
@@ -61,6 +62,17 @@ export const OUTFIT_COLORS = [
   { id: "teal", hex: "#1ABC9C", name: "Teal" },
 ];
 
+export const ACCESSORIES = [
+  { id: "none", name: "None" },
+  { id: "glasses", name: "Glasses" },
+  { id: "sunglasses", name: "Sunglasses" },
+  { id: "bow", name: "Bow" },
+  { id: "ribbon", name: "Ribbon" },
+  { id: "hero_mask", name: "Hero Mask" },
+  { id: "bunny_ears", name: "Bunny Ears" },
+  { id: "crown", name: "Crown" },
+];
+
 const RAINBOW = ["#E74C3C", "#F1C40F", "#2ECC71", "#FF69B4", "#3498DB"];
 
 export const DEFAULT_CONFIG = {
@@ -69,64 +81,9 @@ export const DEFAULT_CONFIG = {
   hairColor: "#2C1810",
   outfitStyle: "dress",
   outfitColor: "#FFFFFF",
+  accessory: "none",
   name: "Player",
 };
-
-export const PRESETS = [
-  {
-    id: "gabrielle",
-    name: "Gabrielle",
-    config: {
-      skinTone: "#C67B5C",
-      hairStyle: "puffs_coils",
-      hairColor: "rainbow",
-      outfitStyle: "dress",
-      outfitColor: "#FFFFFF",
-      name: "Gabrielle",
-    },
-    color: "#FF69B4",
-  },
-  {
-    id: "marcie",
-    name: "Marcie",
-    config: {
-      skinTone: "#C67B5C",
-      hairStyle: "puffs",
-      hairColor: "#1a1008",
-      outfitStyle: "dress",
-      outfitColor: "#F4D03F",
-      name: "Marcie",
-    },
-    color: "#F4D03F",
-    isToddler: true,
-  },
-  {
-    id: "dada",
-    name: "Dada",
-    config: {
-      skinTone: "#572000",
-      hairStyle: "locs",
-      hairColor: "#111111",
-      outfitStyle: "top_shorts",
-      outfitColor: "#2980B9",
-      name: "Dada",
-    },
-    color: "#2980B9",
-  },
-  {
-    id: "mama",
-    name: "Mama",
-    config: {
-      skinTone: "#F0D0B4",
-      hairStyle: "wavy",
-      hairColor: "#3B2314",
-      outfitStyle: "ballgown",
-      outfitColor: "#8E44AD",
-      name: "Mama",
-    },
-    color: "#8E44AD",
-  },
-];
 
 function darken(hex, amt = 20) {
   if (!hex || hex === "rainbow") return "#1a1008";
@@ -146,7 +103,6 @@ export function lighten(hex, amt = 30) {
   return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
 }
 
-// Rainbow-aware color helpers: returns [c1, c2, c3] for any style
 function hairColors(color, isRainbow) {
   if (isRainbow)
     return [RAINBOW[0], RAINBOW[1], RAINBOW[2], RAINBOW[3], RAINBOW[4]];
@@ -301,12 +257,10 @@ function HairBraids({ color, isRainbow }) {
   const [c1, c2, c3] = hairColors(color, isRainbow);
   return (
     <>
-      {/* Hair cap */}
       <path
-        d="M40 42 Q38 26 48 16 Q54 10 60 14 Q66 10 72 16 Q82 26 80 42"
+        d="M40 42 Q38 26 48 18 Q54 12 60 16 Q66 12 72 18 Q82 26 80 42"
         fill={c1}
       />
-      {/* Left braid - zigzag pattern */}
       <path
         d="M42 42 Q38 48 42 54 Q46 60 42 66 Q38 72 42 78 Q46 84 42 90"
         stroke={c1}
@@ -321,7 +275,6 @@ function HairBraids({ color, isRainbow }) {
         fill="none"
         strokeLinecap="round"
       />
-      {/* Right braid */}
       <path
         d="M78 42 Q82 48 78 54 Q74 60 78 66 Q82 72 78 78 Q74 84 78 90"
         stroke={c1}
@@ -336,7 +289,6 @@ function HairBraids({ color, isRainbow }) {
         fill="none"
         strokeLinecap="round"
       />
-      {/* Braid ties */}
       <circle cx="42" cy="90" r="3" fill={c3} />
       <circle cx="78" cy="90" r="3" fill={c2} />
     </>
@@ -347,21 +299,21 @@ function HairWavy({ color, isRainbow }) {
   const [c1, c2] = hairColors(color, isRainbow);
   return (
     <>
-      {/* Hair cap on top of head */}
+      {/* Hair cap - sits snug on head, not too tall */}
       <path
-        d="M40 44 Q38 28 48 18 Q54 12 60 16 Q66 12 72 18 Q82 28 80 44"
+        d="M41 42 Q40 32 48 24 Q54 20 60 22 Q66 20 72 24 Q80 32 79 42"
         fill={c1}
       />
-      {/* Left wavy strands - flowing curves */}
+      {/* Left wavy strands */}
       <path
-        d="M40 44 Q36 52 38 60 Q40 68 36 76 Q34 82 36 88"
+        d="M41 42 Q37 50 39 58 Q41 66 37 74 Q35 80 37 86"
         stroke={c1}
         strokeWidth="7"
         fill="none"
         strokeLinecap="round"
       />
       <path
-        d="M42 44 Q38 53 40 62 Q42 70 38 78 Q36 84 38 90"
+        d="M43 42 Q39 51 41 60 Q43 68 39 76 Q37 82 39 88"
         stroke={c2}
         strokeWidth="4"
         fill="none"
@@ -369,14 +321,14 @@ function HairWavy({ color, isRainbow }) {
       />
       {/* Right wavy strands */}
       <path
-        d="M80 44 Q84 52 82 60 Q80 68 84 76 Q86 82 84 88"
+        d="M79 42 Q83 50 81 58 Q79 66 83 74 Q85 80 83 86"
         stroke={c1}
         strokeWidth="7"
         fill="none"
         strokeLinecap="round"
       />
       <path
-        d="M78 44 Q82 53 80 62 Q78 70 82 78 Q84 84 82 90"
+        d="M77 42 Q81 51 79 60 Q77 68 81 76 Q83 82 81 88"
         stroke={c2}
         strokeWidth="4"
         fill="none"
@@ -390,36 +342,36 @@ function HairStraight({ color, isRainbow }) {
   const [c1, c2] = hairColors(color, isRainbow);
   return (
     <>
-      {/* Hair cap */}
+      {/* Hair cap - snug on head */}
       <path
-        d="M40 44 Q38 28 48 18 Q54 12 60 16 Q66 12 72 18 Q82 28 80 44"
+        d="M41 42 Q40 32 48 24 Q54 20 60 22 Q66 20 72 24 Q80 32 79 42"
         fill={c1}
       />
-      {/* Left straight strands */}
+      {/* Left strands */}
       <path
-        d="M39 44 L37 88"
+        d="M40 42 L38 86"
         stroke={c1}
         strokeWidth="7"
         fill="none"
         strokeLinecap="round"
       />
       <path
-        d="M42 44 L40 90"
+        d="M43 42 L41 88"
         stroke={c2}
         strokeWidth="4"
         fill="none"
         strokeLinecap="round"
       />
-      {/* Right straight strands */}
+      {/* Right strands */}
       <path
-        d="M81 44 L83 88"
+        d="M80 42 L82 86"
         stroke={c1}
         strokeWidth="7"
         fill="none"
         strokeLinecap="round"
       />
       <path
-        d="M78 44 L80 90"
+        d="M77 42 L79 88"
         stroke={c2}
         strokeWidth="4"
         fill="none"
@@ -448,22 +400,19 @@ function HairBuzz({ color, isRainbow }) {
   return (
     <>
       <path
-        d="M40 42 Q38 28 48 20 Q54 16 60 18 Q66 16 72 20 Q82 28 80 42"
+        d="M41 42 Q40 30 48 22 Q54 18 60 20 Q66 18 72 22 Q80 30 79 42"
         fill={c1}
       />
-      {/* Subtle texture */}
-      <path d="M46 28 Q52 22 58 26" stroke={c2} strokeWidth="1.5" fill="none" />
-      <path d="M62 26 Q68 22 74 28" stroke={c2} strokeWidth="1.5" fill="none" />
+      <path d="M46 28 Q52 24 58 28" stroke={c2} strokeWidth="1.5" fill="none" />
+      <path d="M62 28 Q68 24 74 28" stroke={c2} strokeWidth="1.5" fill="none" />
     </>
   );
 }
 
-// Afro: split into back (behind head) and top (above head)
 function HairAfroBack({ color, isRainbow }) {
   const [c1, , c3] = hairColors(color, isRainbow);
   return (
     <>
-      {/* Main volume behind head - kept above neck line */}
       <ellipse cx="60" cy="32" rx="32" ry="22" fill={c1} />
       <ellipse cx="34" cy="32" rx="8" ry="10" fill={c3} />
       <ellipse cx="86" cy="32" rx="8" ry="10" fill={c3} />
@@ -503,7 +452,7 @@ function renderHair(style, color) {
     case "straight":
       return <HairStraight color={c} isRainbow={isRainbow} />;
     case "afro":
-      return null; // handled separately
+      return null;
     case "bun":
       return <HairBun color={c} isRainbow={isRainbow} />;
     case "buzz":
@@ -513,9 +462,221 @@ function renderHair(style, color) {
   }
 }
 
+// ===================== ACCESSORIES =====================
+
+function renderAccessory(accessory, headY, outfitColor) {
+  if (!accessory || accessory === "none") return null;
+
+  switch (accessory) {
+    case "glasses":
+      return (
+        <>
+          <circle
+            cx="52"
+            cy={headY}
+            r="6"
+            fill="none"
+            stroke="#333"
+            strokeWidth="1.5"
+          />
+          <circle
+            cx="68"
+            cy={headY}
+            r="6"
+            fill="none"
+            stroke="#333"
+            strokeWidth="1.5"
+          />
+          <line
+            x1="58"
+            y1={headY}
+            x2="62"
+            y2={headY}
+            stroke="#333"
+            strokeWidth="1.5"
+          />
+          <line
+            x1="46"
+            y1={headY}
+            x2="42"
+            y2={headY - 2}
+            stroke="#333"
+            strokeWidth="1.5"
+          />
+          <line
+            x1="74"
+            y1={headY}
+            x2="78"
+            y2={headY - 2}
+            stroke="#333"
+            strokeWidth="1.5"
+          />
+        </>
+      );
+    case "sunglasses":
+      return (
+        <>
+          <rect
+            x="46"
+            y={headY - 4}
+            width="12"
+            height="8"
+            rx="2"
+            fill="#1a1a2e"
+          />
+          <rect
+            x="62"
+            y={headY - 4}
+            width="12"
+            height="8"
+            rx="2"
+            fill="#1a1a2e"
+          />
+          <line
+            x1="58"
+            y1={headY}
+            x2="62"
+            y2={headY}
+            stroke="#333"
+            strokeWidth="1.5"
+          />
+          <line
+            x1="46"
+            y1={headY - 1}
+            x2="41"
+            y2={headY - 3}
+            stroke="#333"
+            strokeWidth="1.5"
+          />
+          <line
+            x1="74"
+            y1={headY - 1}
+            x2="79"
+            y2={headY - 3}
+            stroke="#333"
+            strokeWidth="1.5"
+          />
+          <rect
+            x="47"
+            y={headY - 3}
+            width="10"
+            height="4"
+            rx="1"
+            fill="rgba(100,149,237,0.3)"
+          />
+          <rect
+            x="63"
+            y={headY - 3}
+            width="10"
+            height="4"
+            rx="1"
+            fill="rgba(100,149,237,0.3)"
+          />
+        </>
+      );
+    case "bow":
+      return (
+        <>
+          <ellipse cx="52" cy="26" rx="8" ry="5" fill="#FF69B4" />
+          <ellipse cx="68" cy="26" rx="8" ry="5" fill="#FF69B4" />
+          <circle cx="60" cy="26" r="3" fill="#E74C3C" />
+        </>
+      );
+    case "ribbon":
+      return (
+        <>
+          <rect x="40" y="24" width="40" height="4" rx="2" fill="#FF69B4" />
+          <path
+            d="M40 26 Q34 32 30 42"
+            stroke="#FF69B4"
+            strokeWidth="3"
+            fill="none"
+            strokeLinecap="round"
+          />
+          <path
+            d="M40 26 Q36 36 34 46"
+            stroke="#E74C3C"
+            strokeWidth="2"
+            fill="none"
+            strokeLinecap="round"
+          />
+        </>
+      );
+    case "hero_mask":
+      return (
+        <>
+          <path
+            d={`M42 ${headY - 4} Q50 ${headY - 7} 60 ${headY - 4} Q70 ${headY - 7} 78 ${headY - 4} L76 ${headY + 2} Q68 ${headY + 5} 60 ${headY + 2} Q52 ${headY + 5} 44 ${headY + 2} Z`}
+            fill="#1a1a2e"
+            opacity="0.85"
+          />
+          <ellipse
+            cx="52"
+            cy={headY - 1}
+            rx="5"
+            ry="4"
+            fill="none"
+            stroke="white"
+            strokeWidth="0.8"
+          />
+          <ellipse
+            cx="68"
+            cy={headY - 1}
+            rx="5"
+            ry="4"
+            fill="none"
+            stroke="white"
+            strokeWidth="0.8"
+          />
+        </>
+      );
+    case "bunny_ears":
+      return (
+        <>
+          <ellipse
+            cx="46"
+            cy="12"
+            rx="3.6"
+            ry="9.72"
+            fill="#f5e6d0"
+            stroke="#ddd"
+            strokeWidth="1"
+          />
+          <ellipse cx="46" cy="12" rx="1.58" ry="6.84" fill="#FFB6C1" />
+          <ellipse
+            cx="74"
+            cy="12"
+            rx="3.6"
+            ry="9.72"
+            fill="#f5e6d0"
+            stroke="#ddd"
+            strokeWidth="1"
+          />
+          <ellipse cx="74" cy="12" rx="1.58" ry="6.84" fill="#FFB6C1" />
+        </>
+      );
+    case "crown":
+      return (
+        <>
+          <polygon
+            points="42,28 46,14 50,22 54,10 58,22 62,10 66,22 70,10 74,22 78,14 78,28"
+            fill="#FFD700"
+            stroke="#DAA520"
+            strokeWidth="0.8"
+          />
+          <circle cx="54" cy="22" r="2" fill="#E74C3C" />
+          <circle cx="62" cy="22" r="2" fill="#3498DB" />
+          <circle cx="70" cy="22" r="2" fill="#2ECC71" />
+        </>
+      );
+    default:
+      return null;
+  }
+}
+
 // ===================== OUTFITS =====================
 
-function renderOutfit(style, color, celebrating, isToddler) {
+function renderOutfit(style, color, celebrating, isToddler, skinTone) {
   const d = darken(color, 15);
   const topY = isToddler ? 82 : 72;
   const hemY = isToddler ? 148 : 142;
@@ -535,6 +696,41 @@ function renderOutfit(style, color, celebrating, isToddler) {
           stroke="rgba(255,255,255,0.12)"
           strokeWidth="6"
           strokeLinecap="round"
+        />
+      </>
+    );
+  }
+  if (style === "puffy_dress") {
+    return (
+      <>
+        {/* Bodice */}
+        <path
+          d="M60 72 Q54 74 50 80 L48 92 L46 100 L74 100 L72 92 L70 80 Q66 74 60 72Z"
+          fill={color}
+          stroke={d}
+          strokeWidth="0.5"
+        />
+        {/* Puffy skirt - big rounded shape */}
+        <path
+          d="M46 100 Q30 110 28 130 Q28 148 44 150 L76 150 Q92 148 92 130 Q90 110 74 100Z"
+          fill={color}
+          stroke={d}
+          strokeWidth="1"
+        />
+        {/* Skirt details */}
+        <path
+          d="M36 120 Q48 118 60 122 Q72 118 84 120"
+          fill="none"
+          stroke={lighten(color, 20)}
+          strokeWidth="1.5"
+          opacity="0.5"
+        />
+        <path
+          d="M32 135 Q46 132 60 136 Q74 132 88 135"
+          fill="none"
+          stroke={lighten(color, 20)}
+          strokeWidth="1.5"
+          opacity="0.4"
         />
       </>
     );
@@ -578,106 +774,99 @@ function renderOutfit(style, color, celebrating, isToddler) {
   if (style === "astronaut") {
     return (
       <>
-        {/* Legs in white suit */}
-        <line
-          x1="54"
-          y1="132"
-          x2="52"
-          y2="158"
-          stroke="#ddd"
-          strokeWidth="6"
-          strokeLinecap="round"
-        />
-        <line
-          x1="66"
-          y1="132"
-          x2="68"
-          y2="158"
-          stroke="#ddd"
-          strokeWidth="6"
-          strokeLinecap="round"
-        />
-        {/* Boots */}
-        <ellipse cx="52" cy="160" rx="5" ry="3" fill="#666" />
-        <ellipse cx="68" cy="160" rx="5" ry="3" fill="#666" />
-        {/* Suit body */}
+        {/* Suit body - one piece with integrated legs */}
         <path
-          d="M60 68 Q50 70 46 80 L44 100 L42 132 L78 132 L76 100 L74 80 Q70 70 60 68Z"
+          d="M60 68 Q50 70 46 80 L44 100 L42 118 L40 142 L52 142 L56 118 L60 110 L64 118 L68 142 L80 142 L78 118 L76 100 L74 80 Q70 70 60 68Z"
           fill="#e8e8e8"
           stroke="#ccc"
           strokeWidth="1"
         />
-        {/* Suit details */}
+        {/* Boots */}
+        <ellipse cx="46" cy="144" rx="7" ry="4" fill="#666" />
+        <ellipse cx="74" cy="144" rx="7" ry="4" fill="#666" />
+        {/* Backpack outline */}
         <rect
-          x="52"
-          y="82"
-          width="16"
-          height="12"
-          rx="3"
-          fill={color}
-          stroke={d}
-          strokeWidth="0.5"
-        />
-        {/* Backpack */}
-        <rect
-          x="48"
-          y="75"
-          width="24"
-          height="30"
+          x="50"
+          y="78"
+          width="20"
+          height="24"
           rx="4"
           fill="#bbb"
           stroke="#999"
           strokeWidth="0.5"
         />
+        {/* Chest panel */}
         <rect
-          x="52"
-          y="82"
-          width="16"
-          height="12"
-          rx="3"
+          x="53"
+          y="84"
+          width="14"
+          height="10"
+          rx="2"
           fill={color}
           stroke={d}
           strokeWidth="0.5"
         />
+        {/* Belt */}
+        <rect x="42" y="106" width="36" height="3" rx="1.5" fill="#999" />
         {/* Helmet ring */}
-        <ellipse cx="60" cy="60" rx="22" ry="4" fill="#bbb" />
+        <ellipse
+          cx="60"
+          cy="62"
+          rx="22"
+          ry="3.5"
+          fill="rgba(187,187,187,0.7)"
+        />
       </>
     );
   }
   if (style === "superhero") {
     return (
       <>
-        {/* Cape - flows behind */}
+        {/* Cape */}
         <path
           d={
             celebrating
-              ? "M52 72 Q40 85 28 140 L92 140 Q80 85 68 72"
-              : "M52 72 Q44 90 36 145 L84 145 Q76 90 68 72"
+              ? "M52 72 Q38 90 26 145 L94 145 Q82 90 68 72"
+              : "M52 72 Q42 95 34 148 L86 148 Q78 95 68 72"
           }
           fill={color}
           stroke={d}
           strokeWidth="1"
-          opacity="0.9"
         />
-        {/* Body suit */}
+        {/* Legs in darker suit */}
+        <line
+          x1="54"
+          y1="108"
+          x2="52"
+          y2="142"
+          stroke={darken(color, 60)}
+          strokeWidth="6"
+          strokeLinecap="round"
+        />
+        <line
+          x1="66"
+          y1="108"
+          x2="68"
+          y2="142"
+          stroke={darken(color, 60)}
+          strokeWidth="6"
+          strokeLinecap="round"
+        />
+        {/* Boots */}
+        <ellipse cx="52" cy="144" rx="5" ry="3" fill={color} />
+        <ellipse cx="68" cy="144" rx="5" ry="3" fill={color} />
+        {/* Body suit - much darker than cape */}
         <path
           d="M60 68 Q52 70 48 78 L46 92 L44 108 L76 108 L74 92 L72 78 Q68 70 60 68Z"
-          fill={darken(color, 40)}
-          stroke={darken(color, 60)}
-          strokeWidth="0.5"
-        />
-        {/* Trunks */}
-        <path
-          d="M60 108 Q50 110 46 118 L44 132 L56 132 L60 118 L64 132 L76 132 L74 118 Q70 110 60 108Z"
-          fill={color}
-          stroke={d}
+          fill={darken(color, 60)}
+          stroke={darken(color, 80)}
           strokeWidth="0.5"
         />
         {/* Belt */}
-        <rect x="44" y="106" width="32" height="4" rx="2" fill="#FFD700" />
-        {/* Emblem */}
+        <rect x="44" y="105" width="32" height="4" rx="2" fill="#FFD700" />
+        {/* Emblem star */}
         <polygon
-          points="60,78 63,86 71,86 65,91 67,99 60,95 53,99 55,91 49,86 57,86"
+          points="60,80 62,86 69,86 64,90 66,96 60,92 54,96 56,90 51,86 58,86"
           fill="#FFD700"
         />
       </>
@@ -686,30 +875,30 @@ function renderOutfit(style, color, celebrating, isToddler) {
   if (style === "tutu") {
     return (
       <>
-        {/* Leotard top */}
+        {/* Leotard - extends down to connect with legs */}
         <path
-          d="M60 72 Q54 74 50 80 L48 92 L46 100 L74 100 L72 92 L70 80 Q66 74 60 72Z"
+          d="M60 72 Q54 74 50 80 L48 92 L46 108 L74 108 L72 92 L70 80 Q66 74 60 72Z"
           fill={color}
           stroke={d}
           strokeWidth="0.5"
         />
-        {/* Tutu skirt - ruffled layers */}
-        <ellipse cx="60" cy="102" rx="28" ry="8" fill={color} opacity="0.7" />
+        {/* Tutu skirt layers */}
+        <ellipse cx="60" cy="108" rx="26" ry="7" fill={color} opacity="0.8" />
         <ellipse
           cx="60"
-          cy="106"
-          rx="30"
-          ry="8"
-          fill={lighten(color, 20)}
-          opacity="0.6"
-        />
-        <ellipse cx="60" cy="110" rx="32" ry="8" fill={color} opacity="0.5" />
-        <ellipse
-          cx="60"
-          cy="114"
+          cy="112"
           rx="28"
-          ry="6"
-          fill={lighten(color, 30)}
+          ry="7"
+          fill={lighten(color, 15)}
+          opacity="0.65"
+        />
+        <ellipse cx="60" cy="116" rx="30" ry="7" fill={color} opacity="0.5" />
+        <ellipse
+          cx="60"
+          cy="120"
+          rx="26"
+          ry="5"
+          fill={lighten(color, 25)}
           opacity="0.4"
         />
       </>
@@ -735,7 +924,14 @@ export default function CustomCharacter({
   crying = false,
   isToddler = false,
 }) {
-  const { skinTone, hairStyle, hairColor, outfitStyle, outfitColor } = config;
+  const {
+    skinTone,
+    hairStyle,
+    hairColor,
+    outfitStyle,
+    outfitColor,
+    accessory,
+  } = config;
   const eyeColor =
     skinTone === "#3B1E08" || skinTone === "#572000" ? "#1a1008" : "#2C1810";
   const headY = isToddler ? 54 : 46;
@@ -749,14 +945,13 @@ export default function CustomCharacter({
   const isRainbow = hairColor === "rainbow";
   const hairC = isRainbow ? "#2C1810" : hairColor;
 
-  // Outfit-specific leg visibility
-  const hideLegs =
+  // Outfits that handle their own legs
+  const outfitHandlesLegs =
     outfitStyle === "ballgown" ||
     outfitStyle === "astronaut" ||
-    outfitStyle === "superhero";
+    outfitStyle === "superhero" ||
+    outfitStyle === "puffy_dress";
   const showGownLegs = outfitStyle === "ballgown" && !isToddler;
-
-  // Cheek color based on skin tone
   const cheekColor = lighten(skinTone, 30) + "45";
 
   return (
@@ -765,7 +960,7 @@ export default function CustomCharacter({
       style={{ width: size, height: size + 30 }}
     >
       <svg viewBox="0 0 120 170" width={size} height={size + 30}>
-        {/* Legs */}
+        {/* Legs - only for outfits that don't draw their own */}
         {showGownLegs && (
           <>
             <line
@@ -788,7 +983,7 @@ export default function CustomCharacter({
             />
           </>
         )}
-        {!hideLegs && (
+        {!outfitHandlesLegs && (
           <>
             <line
               x1="54"
@@ -812,7 +1007,13 @@ export default function CustomCharacter({
         )}
 
         {/* Outfit */}
-        {renderOutfit(outfitStyle, outfitColor, celebrating, isToddler)}
+        {renderOutfit(
+          outfitStyle,
+          outfitColor,
+          celebrating,
+          isToddler,
+          skinTone,
+        )}
 
         {/* Arms */}
         <path
@@ -848,7 +1049,7 @@ export default function CustomCharacter({
           fill={skinTone}
         />
 
-        {/* Afro back - BEFORE head so it sits behind */}
+        {/* Afro back */}
         {isAfro && <HairAfroBack color={hairC} isRainbow={isRainbow} />}
 
         {/* Head */}
@@ -858,7 +1059,7 @@ export default function CustomCharacter({
           <ellipse cx="60" cy={headY} rx={headRx} ry={headRy} fill={skinTone} />
         )}
 
-        {/* Hair - afro top AFTER head, others also after head */}
+        {/* Hair */}
         {isAfro ? (
           <HairAfroTop color={hairC} isRainbow={isRainbow} />
         ) : (
@@ -925,6 +1126,7 @@ export default function CustomCharacter({
             />
           </>
         )}
+
         {/* Cheeks */}
         <circle
           cx={isToddler ? 45 : 47}
@@ -939,7 +1141,10 @@ export default function CustomCharacter({
           fill={cheekColor}
         />
 
-        {/* Astronaut helmet visor (drawn last, over face) */}
+        {/* Accessory */}
+        {renderAccessory(accessory, headY, outfitColor)}
+
+        {/* Astronaut helmet visor */}
         {outfitStyle === "astronaut" && (
           <ellipse
             cx="60"
