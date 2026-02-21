@@ -980,12 +980,17 @@ export default function KindEmojisBattle() {
           skinTone: "#A0A0A0",
           hairStyle: "buzz",
           hairColor: "#3498DB",
-          outfitStyle: "astronaut",
+          outfitStyle: "robot",
           outfitColor: "#3498DB",
           accessory: "sunglasses",
           name: "Robo",
         };
-        setP2Info({ config: robotConfig, color: "#3498DB", isToddler: false });
+        setP2Info({
+          config: robotConfig,
+          color: "#3498DB",
+          isToddler: false,
+          isRobot: true,
+        });
         setCurrentLevel(0);
         setCurrentPlayer(1);
         setP1Scores(0);
@@ -1176,6 +1181,7 @@ export default function KindEmojisBattle() {
         celebrating={cel}
         crying={cry}
         isToddler={info.isToddler}
+        isRobot={info.isRobot}
       />
     );
   };
@@ -1261,10 +1267,11 @@ export default function KindEmojisBattle() {
                   top: "50%",
                   left: "50%",
                   transform: "translate(-50%, -50%)",
-                  fontSize: "0.7em",
+                  fontSize: "0.84em",
+                  opacity: 0.7,
                 }}
               >
-                😍
+                ⚔️
               </span>
               <span
                 style={{
@@ -1272,11 +1279,10 @@ export default function KindEmojisBattle() {
                   top: "50%",
                   left: "50%",
                   transform: "translate(-50%, -50%)",
-                  fontSize: "0.84em",
-                  opacity: 0.7,
+                  fontSize: "0.7em",
                 }}
               >
-                ⚔️
+                😍
               </span>
             </span>
             Battle!
@@ -1294,10 +1300,11 @@ export default function KindEmojisBattle() {
                   top: "50%",
                   left: "50%",
                   transform: "translate(-50%, -50%)",
-                  fontSize: "0.7em",
+                  fontSize: "0.84em",
+                  opacity: 0.7,
                 }}
               >
-                😍
+                ⚔️
               </span>
               <span
                 style={{
@@ -1305,11 +1312,10 @@ export default function KindEmojisBattle() {
                   top: "50%",
                   left: "50%",
                   transform: "translate(-50%, -50%)",
-                  fontSize: "0.84em",
-                  opacity: 0.7,
+                  fontSize: "0.7em",
                 }}
               >
-                ⚔️
+                😍
               </span>
             </span>
           </div>

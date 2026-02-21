@@ -47,6 +47,7 @@ export const OUTFIT_STYLES = [
   { id: "top_trousers", name: "Top & Trousers" },
   { id: "astronaut", name: "Astronaut" },
   { id: "superhero", name: "Superhero" },
+  { id: "robot", name: "Robot" },
 ];
 
 export const OUTFIT_COLORS = [
@@ -703,6 +704,25 @@ function renderOutfit(style, color, celebrating, isToddler, skinTone) {
   if (style === "puffy_dress") {
     return (
       <>
+        {/* Little legs peeking out */}
+        <line
+          x1="52"
+          y1="148"
+          x2="50"
+          y2="162"
+          stroke={skinTone}
+          strokeWidth="4"
+          strokeLinecap="round"
+        />
+        <line
+          x1="68"
+          y1="148"
+          x2="70"
+          y2="162"
+          stroke={skinTone}
+          strokeWidth="4"
+          strokeLinecap="round"
+        />
         {/* Bodice */}
         <path
           d="M60 72 Q54 74 50 80 L48 92 L46 100 L74 100 L72 92 L70 80 Q66 74 60 72Z"
@@ -838,7 +858,7 @@ function renderOutfit(style, color, celebrating, isToddler, skinTone) {
           x1="54"
           y1="108"
           x2="52"
-          y2="142"
+          y2="156"
           stroke={darken(color, 60)}
           strokeWidth="6"
           strokeLinecap="round"
@@ -847,14 +867,14 @@ function renderOutfit(style, color, celebrating, isToddler, skinTone) {
           x1="66"
           y1="108"
           x2="68"
-          y2="142"
+          y2="156"
           stroke={darken(color, 60)}
           strokeWidth="6"
           strokeLinecap="round"
         />
         {/* Boots */}
-        <ellipse cx="52" cy="144" rx="5" ry="3" fill={color} />
-        <ellipse cx="68" cy="144" rx="5" ry="3" fill={color} />
+        <ellipse cx="52" cy="158" rx="5" ry="3" fill={color} />
+        <ellipse cx="68" cy="158" rx="5" ry="3" fill={color} />
         {/* Body suit - much darker than cape */}
         <path
           d="M60 68 Q52 70 48 78 L46 92 L44 108 L76 108 L74 92 L72 78 Q68 70 60 68Z"
@@ -875,7 +895,26 @@ function renderOutfit(style, color, celebrating, isToddler, skinTone) {
   if (style === "tutu") {
     return (
       <>
-        {/* Leotard - extends down to connect with legs */}
+        {/* Legs under tutu */}
+        <line
+          x1="54"
+          y1="120"
+          x2="51"
+          y2="160"
+          stroke={skinTone}
+          strokeWidth="4"
+          strokeLinecap="round"
+        />
+        <line
+          x1="66"
+          y1="120"
+          x2="69"
+          y2="160"
+          stroke={skinTone}
+          strokeWidth="4"
+          strokeLinecap="round"
+        />
+        {/* Leotard */}
         <path
           d="M60 72 Q54 74 50 80 L48 92 L46 108 L74 108 L72 92 L70 80 Q66 74 60 72Z"
           fill={color}
@@ -904,6 +943,66 @@ function renderOutfit(style, color, celebrating, isToddler, skinTone) {
       </>
     );
   }
+  if (style === "robot") {
+    return (
+      <>
+        {/* Boxy robot body */}
+        <rect
+          x="44"
+          y="68"
+          width="32"
+          height="40"
+          rx="4"
+          fill="#A0A0A0"
+          stroke="#888"
+          strokeWidth="1"
+        />
+        {/* Chest panel */}
+        <rect x="50" y="74" width="20" height="14" rx="2" fill="#333" />
+        {/* Lights on chest */}
+        <circle cx="55" cy="79" r="2" fill={color} />
+        <circle cx="60" cy="79" r="2" fill="#2ECC71" />
+        <circle cx="65" cy="79" r="2" fill="#E74C3C" />
+        {/* Belly button / dial */}
+        <circle
+          cx="60"
+          cy="96"
+          r="4"
+          fill="#666"
+          stroke="#555"
+          strokeWidth="1"
+        />
+        <circle cx="60" cy="96" r="2" fill={color} />
+        {/* Robot legs */}
+        <rect
+          x="48"
+          y="108"
+          width="8"
+          height="34"
+          rx="3"
+          fill="#888"
+          stroke="#777"
+          strokeWidth="0.5"
+        />
+        <rect
+          x="64"
+          y="108"
+          width="8"
+          height="34"
+          rx="3"
+          fill="#888"
+          stroke="#777"
+          strokeWidth="0.5"
+        />
+        {/* Feet */}
+        <ellipse cx="52" cy="144" rx="7" ry="3" fill="#666" />
+        <ellipse cx="68" cy="144" rx="7" ry="3" fill="#666" />
+        {/* Bolts */}
+        <circle cx="46" cy="72" r="1.5" fill="#FFD700" />
+        <circle cx="74" cy="72" r="1.5" fill="#FFD700" />
+      </>
+    );
+  }
   // Default: dress
   return (
     <path
@@ -923,6 +1022,7 @@ export default function CustomCharacter({
   celebrating = false,
   crying = false,
   isToddler = false,
+  isRobot = false,
 }) {
   const {
     skinTone,
@@ -950,7 +1050,9 @@ export default function CustomCharacter({
     outfitStyle === "ballgown" ||
     outfitStyle === "astronaut" ||
     outfitStyle === "superhero" ||
-    outfitStyle === "puffy_dress";
+    outfitStyle === "puffy_dress" ||
+    outfitStyle === "tutu" ||
+    outfitStyle === "robot";
   const showGownLegs = outfitStyle === "ballgown" && !isToddler;
   const cheekColor = lighten(skinTone, 30) + "45";
 
@@ -1040,121 +1142,216 @@ export default function CustomCharacter({
         />
 
         {/* Neck */}
-        <rect
-          x="57"
-          y={neckY}
-          width="6"
-          height={neckH}
-          rx="3"
-          fill={skinTone}
-        />
+        {isRobot ? (
+          <rect x="56" y={neckY} width="8" height={neckH} rx="2" fill="#888" />
+        ) : (
+          <rect
+            x="57"
+            y={neckY}
+            width="6"
+            height={neckH}
+            rx="3"
+            fill={skinTone}
+          />
+        )}
 
         {/* Afro back */}
-        {isAfro && <HairAfroBack color={hairC} isRainbow={isRainbow} />}
-
-        {/* Head */}
-        {isToddler ? (
-          <circle cx="60" cy={headY} r={headRx} fill={skinTone} />
-        ) : (
-          <ellipse cx="60" cy={headY} rx={headRx} ry={headRy} fill={skinTone} />
+        {isAfro && !isRobot && (
+          <HairAfroBack color={hairC} isRainbow={isRainbow} />
         )}
 
-        {/* Hair */}
-        {isAfro ? (
-          <HairAfroTop color={hairC} isRainbow={isRainbow} />
-        ) : (
-          renderHair(hairStyle, hairColor)
-        )}
-
-        {/* Face */}
-        {crying ? (
+        {isRobot ? (
           <>
-            <path
-              d={`M51 ${headY - 2} Q53 ${headY + 1} 55 ${headY - 2}`}
-              fill="none"
-              stroke={eyeColor}
-              strokeWidth="1.8"
-              strokeLinecap="round"
+            {/* Robot head - boxy */}
+            <rect
+              x="40"
+              y={headY - 18}
+              width="40"
+              height="36"
+              rx="6"
+              fill="#A0A0A0"
+              stroke="#888"
+              strokeWidth="1"
             />
-            <path
-              d={`M65 ${headY - 2} Q67 ${headY + 1} 69 ${headY - 2}`}
-              fill="none"
-              stroke={eyeColor}
-              strokeWidth="1.8"
-              strokeLinecap="round"
+            {/* Visor / screen */}
+            <rect
+              x="46"
+              y={headY - 10}
+              width="28"
+              height="16"
+              rx="3"
+              fill="#1a2a3a"
             />
-            <path
-              d={`M55 ${headY + 10} Q60 ${headY + 6} 65 ${headY + 10}`}
-              fill="none"
-              stroke={eyeColor}
-              strokeWidth="1.8"
-              strokeLinecap="round"
+            {/* Robot eyes - glowing */}
+            <circle
+              cx="53"
+              cy={headY - 2}
+              r="3.5"
+              fill={celebrating ? "#2ECC71" : "#3498DB"}
             />
+            <circle
+              cx="67"
+              cy={headY - 2}
+              r="3.5"
+              fill={celebrating ? "#2ECC71" : "#3498DB"}
+            />
+            <circle cx="53" cy={headY - 2} r="1.5" fill="#fff" opacity="0.7" />
+            <circle cx="67" cy={headY - 2} r="1.5" fill="#fff" opacity="0.7" />
+            {/* Mouth - LED strip */}
+            {crying ? (
+              <path
+                d={`M53 ${headY + 8} Q60 ${headY + 4} 67 ${headY + 8}`}
+                fill="none"
+                stroke="#E74C3C"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            ) : celebrating ? (
+              <path
+                d={`M53 ${headY + 5} Q60 ${headY + 11} 67 ${headY + 5}`}
+                fill="none"
+                stroke="#2ECC71"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            ) : (
+              <line
+                x1="53"
+                y1={headY + 7}
+                x2="67"
+                y2={headY + 7}
+                stroke="#3498DB"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            )}
+            {/* Antenna */}
             <line
-              x1="52"
-              y1={headY + 3}
-              x2="50"
-              y2={headY + 10}
-              stroke="#5BC0EB"
-              strokeWidth="1.5"
-              strokeLinecap="round"
+              x1="60"
+              y1={headY - 18}
+              x2="60"
+              y2={headY - 26}
+              stroke="#888"
+              strokeWidth="2"
             />
-            <line
-              x1="68"
-              y1={headY + 3}
-              x2="70"
-              y2={headY + 10}
-              stroke="#5BC0EB"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
+            <circle cx="60" cy={headY - 28} r="3" fill="#E74C3C" />
+            {/* Ear bolts */}
+            <circle cx="41" cy={headY} r="3" fill="#FFD700" />
+            <circle cx="79" cy={headY} r="3" fill="#FFD700" />
           </>
         ) : (
           <>
-            <circle cx="53" cy={headY} r="2.5" fill={eyeColor} />
-            <circle cx="67" cy={headY} r="2.5" fill={eyeColor} />
-            <path
-              d={
-                celebrating
-                  ? `M53 ${headY + 9} Q60 ${headY + 18} 67 ${headY + 9}`
-                  : `M55 ${headY + 10} Q60 ${headY + 16} 65 ${headY + 10}`
-              }
-              fill="none"
-              stroke={eyeColor}
-              strokeWidth="1.8"
-              strokeLinecap="round"
+            {/* Head */}
+            {isToddler ? (
+              <circle cx="60" cy={headY} r={headRx} fill={skinTone} />
+            ) : (
+              <ellipse
+                cx="60"
+                cy={headY}
+                rx={headRx}
+                ry={headRy}
+                fill={skinTone}
+              />
+            )}
+
+            {/* Hair */}
+            {isAfro ? (
+              <HairAfroTop color={hairC} isRainbow={isRainbow} />
+            ) : (
+              renderHair(hairStyle, hairColor)
+            )}
+
+            {/* Face */}
+            {crying ? (
+              <>
+                <path
+                  d={`M51 ${headY - 2} Q53 ${headY + 1} 55 ${headY - 2}`}
+                  fill="none"
+                  stroke={eyeColor}
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                />
+                <path
+                  d={`M65 ${headY - 2} Q67 ${headY + 1} 69 ${headY - 2}`}
+                  fill="none"
+                  stroke={eyeColor}
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                />
+                <path
+                  d={`M55 ${headY + 10} Q60 ${headY + 6} 65 ${headY + 10}`}
+                  fill="none"
+                  stroke={eyeColor}
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                />
+                <line
+                  x1="52"
+                  y1={headY + 3}
+                  x2="50"
+                  y2={headY + 10}
+                  stroke="#5BC0EB"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                />
+                <line
+                  x1="68"
+                  y1={headY + 3}
+                  x2="70"
+                  y2={headY + 10}
+                  stroke="#5BC0EB"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                />
+              </>
+            ) : (
+              <>
+                <circle cx="53" cy={headY} r="2.5" fill={eyeColor} />
+                <circle cx="67" cy={headY} r="2.5" fill={eyeColor} />
+                <path
+                  d={
+                    celebrating
+                      ? `M53 ${headY + 9} Q60 ${headY + 18} 67 ${headY + 9}`
+                      : `M55 ${headY + 10} Q60 ${headY + 16} 65 ${headY + 10}`
+                  }
+                  fill="none"
+                  stroke={eyeColor}
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                />
+              </>
+            )}
+
+            {/* Cheeks */}
+            <circle
+              cx={isToddler ? 45 : 47}
+              cy={headY + 6}
+              r={isToddler ? 4 : 3.5}
+              fill={cheekColor}
             />
+            <circle
+              cx={isToddler ? 75 : 73}
+              cy={headY + 6}
+              r={isToddler ? 4 : 3.5}
+              fill={cheekColor}
+            />
+
+            {/* Accessory */}
+            {renderAccessory(accessory, headY, outfitColor)}
+
+            {/* Astronaut helmet visor */}
+            {outfitStyle === "astronaut" && (
+              <ellipse
+                cx="60"
+                cy={headY}
+                rx={headRx + 4}
+                ry={headRy + 4}
+                fill="none"
+                stroke="#bbb"
+                strokeWidth="2.5"
+              />
+            )}
           </>
-        )}
-
-        {/* Cheeks */}
-        <circle
-          cx={isToddler ? 45 : 47}
-          cy={headY + 6}
-          r={isToddler ? 4 : 3.5}
-          fill={cheekColor}
-        />
-        <circle
-          cx={isToddler ? 75 : 73}
-          cy={headY + 6}
-          r={isToddler ? 4 : 3.5}
-          fill={cheekColor}
-        />
-
-        {/* Accessory */}
-        {renderAccessory(accessory, headY, outfitColor)}
-
-        {/* Astronaut helmet visor */}
-        {outfitStyle === "astronaut" && (
-          <ellipse
-            cx="60"
-            cy={headY}
-            rx={headRx + 4}
-            ry={headRy + 4}
-            fill="none"
-            stroke="#bbb"
-            strokeWidth="2.5"
-          />
         )}
       </svg>
     </div>
