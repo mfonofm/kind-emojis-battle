@@ -307,10 +307,62 @@ const FONT_LINK =
   "https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap";
 
 // ========== Character Creator ==========
+const NAME_FIRST = [
+  "Mighty",
+  "Happy",
+  "Super",
+  "Cool",
+  "Little",
+  "Brave",
+  "Cosmic",
+  "Funny",
+  "Speedy",
+  "Sneaky",
+  "Dizzy",
+  "Fluffy",
+  "Groovy",
+  "Lucky",
+  "Cheeky",
+  "Wild",
+  "Jolly",
+  "Tiny",
+  "Magic",
+  "Silly",
+];
+const NAME_SECOND = [
+  "Star",
+  "Panda",
+  "Dragon",
+  "Rocket",
+  "Tiger",
+  "Cloud",
+  "Phoenix",
+  "Mango",
+  "Pickle",
+  "Biscuit",
+  "Noodle",
+  "Banana",
+  "Waffle",
+  "Penguin",
+  "Nugget",
+  "Wizard",
+  "Bubble",
+  "Cupcake",
+  "Potato",
+  "Donut",
+];
+
 function CharacterCreator({ onDone, onBack, playerNum = 1 }) {
   const [config, setConfig] = useState({ ...DEFAULT_CONFIG });
   const [step, setStep] = useState(0);
   const [nameInput, setNameInput] = useState("");
+  const [spinning, setSpinning] = useState(false);
+  const [spinFirst, setSpinFirst] = useState(
+    NAME_FIRST[Math.floor(Math.random() * NAME_FIRST.length)],
+  );
+  const [spinSecond, setSpinSecond] = useState(
+    NAME_SECOND[Math.floor(Math.random() * NAME_SECOND.length)],
+  );
   const steps = [
     {
       label: "Skin Tone",
@@ -358,7 +410,11 @@ function CharacterCreator({ onDone, onBack, playerNum = 1 }) {
   const next = () => {
     playClick();
     if (step < steps.length - 1) setStep(step + 1);
-    else onDone({ ...config, name: nameInput.trim() || `Player ${playerNum}` });
+    else
+      onDone({
+        ...config,
+        name: nameInput.trim() || `${spinFirst} ${spinSecond}`,
+      });
   };
   const prev = () => {
     playClick();
@@ -548,34 +604,124 @@ function CharacterCreator({ onDone, onBack, playerNum = 1 }) {
         </div>
       )}
       {cur.type === "name" && (
-        <div style={{ marginBottom: 16 }}>
-          <input
-            value={nameInput}
-            onChange={(e) => setNameInput(e.target.value.slice(0, 12))}
-            placeholder="Enter name..."
+        <div style={{ marginBottom: 16, textAlign: "center" }}>
+          <div
             style={{
-              padding: "12px 20px",
-              fontSize: 18,
-              borderRadius: 16,
-              border: "2px solid rgba(255,255,255,0.3)",
-              background: "rgba(255,255,255,0.1)",
-              color: "#fff",
-              fontFamily: "'Fredoka', sans-serif",
-              textAlign: "center",
-              outline: "none",
-              width: 200,
+              display: "flex",
+              gap: 8,
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: 16,
             }}
-          />
+          >
+            <div
+              style={{
+                background: "rgba(0,0,0,0.4)",
+                borderRadius: 12,
+                padding: "10px 14px",
+                minWidth: 90,
+                fontSize: 17,
+                fontWeight: 700,
+                color: "#fff",
+                fontFamily: "'Fredoka', sans-serif",
+                border: "2px solid rgba(255,255,255,0.2)",
+                transition: "transform 0.1s",
+                transform: spinning
+                  ? `translateY(${Math.random() > 0.5 ? 2 : -2}px)`
+                  : "none",
+              }}
+            >
+              {spinFirst}
+            </div>
+            <div
+              style={{
+                background: "rgba(0,0,0,0.4)",
+                borderRadius: 12,
+                padding: "10px 14px",
+                minWidth: 90,
+                fontSize: 17,
+                fontWeight: 700,
+                color: "#fff",
+                fontFamily: "'Fredoka', sans-serif",
+                border: "2px solid rgba(255,255,255,0.2)",
+                transition: "transform 0.1s",
+                transform: spinning
+                  ? `translateY(${Math.random() > 0.5 ? 2 : -2}px)`
+                  : "none",
+              }}
+            >
+              {spinSecond}
+            </div>
+          </div>
+          <button
+            onClick={() => {
+              if (spinning) return;
+              playClick();
+              setSpinning(true);
+              let count = 0;
+              const maxSpins = 12 + Math.floor(Math.random() * 6);
+              const interval = setInterval(
+                () => {
+                  setSpinFirst(
+                    NAME_FIRST[Math.floor(Math.random() * NAME_FIRST.length)],
+                  );
+                  setSpinSecond(
+                    NAME_SECOND[Math.floor(Math.random() * NAME_SECOND.length)],
+                  );
+                  count++;
+                  if (count >= maxSpins) {
+                    clearInterval(interval);
+                    setSpinning(false);
+                  }
+                },
+                80 + count * 8,
+              );
+            }}
+            disabled={spinning}
+            style={{
+              padding: "10px 28px",
+              fontSize: 16,
+              fontWeight: 700,
+              fontFamily: "'Fredoka', sans-serif",
+              background: spinning
+                ? "rgba(255,255,255,0.1)"
+                : "linear-gradient(135deg, #F1C40F, #E67E22)",
+              color: "#fff",
+              border: "2px solid rgba(255,255,255,0.3)",
+              borderRadius: 50,
+              cursor: spinning ? "not-allowed" : "pointer",
+              marginBottom: 8,
+            }}
+          >
+            {spinning ? "Spinning..." : "🎰 Spin!"}
+          </button>
           <div
             style={{
               fontSize: 11,
               color: "rgba(255,255,255,0.5)",
               marginTop: 4,
-              textAlign: "center",
             }}
           >
-            Max 12 characters
+            Spin for a name or type your own below
           </div>
+          <input
+            value={nameInput}
+            onChange={(e) => setNameInput(e.target.value.slice(0, 12))}
+            placeholder="Or type a name..."
+            style={{
+              padding: "8px 16px",
+              fontSize: 14,
+              borderRadius: 12,
+              border: "1px solid rgba(255,255,255,0.2)",
+              background: "rgba(255,255,255,0.08)",
+              color: "#fff",
+              fontFamily: "'Fredoka', sans-serif",
+              textAlign: "center",
+              outline: "none",
+              width: 180,
+              marginTop: 8,
+            }}
+          />
         </div>
       )}
       <div style={{ display: "flex", gap: 12 }}>
