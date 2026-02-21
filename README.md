@@ -1,42 +1,74 @@
-# Kind Emojis Battle! 🎮
+# Kind Emojis Battle 🎮
 
-A two-player emoji battle game for kids. Pick kind emojis and throw them over the wall!
+A 1–2 player browser game about spreading kindness.
 
-## Quick Start (2 minutes)
+Built with my daughter, this playful emoji battle lets you create your own character and compete by throwing emojis over the wall.
 
-### 1. Install dependencies
+Play against the computer or challenge another player locally. First to 10 points wins each level. Complete all 5 levels to win the game.
+
+The game is built as a Progressive Web App (PWA), so it can be installed and played like a native app.
+
+## Live Demo
+
+[kindemojisbattle.com](https://www.kindemojisbattle.com)
+
+## How It Works
+
+Each round, players choose from a mixed pool of 10 emojis:
+
+- Kind emoji = +1 point
+- Neutral emoji = 0 points
+- Mean emoji = -1 point
+
+Choose carefully. Small choices add up.
+
+## Game Flow
+
+- Create your own character
+- Choose from the shared emoji pool
+- Take turns throwing emojis
+- First to 10 points wins the level
+- Progress through 5 levels
+
+## Game Modes
+
+- Single player vs computer
+- Two-player local mode
+
+## PWA Features
+
+- Installable on mobile and desktop
+- Fast loading
+- Works offline after first load
+
+## Why We Built It
+
+We wanted to build something fun together that encourages positive choices, creativity, and turn-taking.
+
+## Tech Stack
+
+- React
+- Vite
+- Service Worker (PWA)
+- Deployed via GitHub Pages with a custom domain
+
+## Development
+
+Install dependencies:
 
 ```bash
-cd kind-emojis-battle
 npm install
 ```
 
-### 2. Run locally
+Run locally:
 
 ```bash
 npm run dev
 ```
 
-This opens a local server (usually http://localhost:5173). Open it on your phone or browser to play!
+Build and deploy:
 
-## Adding Sound Effects Later
-
-Drop audio files into `src/assets/sounds/` and import them:
-
-```jsx
-import popSound from "./assets/sounds/pop.mp3";
-
-const audio = new Audio(popSound);
-audio.play();
+```bash
+npm run build
+npm run deploy
 ```
-
-Vite will handle bundling the audio files automatically.
-
-## Commands
-
-| Command           | What it does                           |
-| ----------------- | -------------------------------------- |
-| `npm run dev`     | Start local dev server with hot reload |
-| `npm run build`   | Build for production into `dist/`      |
-| `npm run preview` | Preview the production build locally   |
-| `npm run deploy`  | Build + deploy to GitHub Pages         |
