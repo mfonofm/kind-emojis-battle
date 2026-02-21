@@ -767,27 +767,25 @@ function CharSelectScreen({ playerNum, takenConfig, onSelect, onBack }) {
       >
         {"\u2728"} Create Character {"\u2728"}
       </button>
-      {allChars.length > 0 && (
-        <button
-          onClick={() => {
-            playClick();
-            onBack();
-          }}
-          style={{
-            padding: "8px 24px",
-            fontSize: 14,
-            fontWeight: 600,
-            fontFamily: "'Fredoka', sans-serif",
-            background: "rgba(255,255,255,0.15)",
-            color: "#fff",
-            border: "1px solid rgba(255,255,255,0.3)",
-            borderRadius: 30,
-            cursor: "pointer",
-          }}
-        >
-          {"\u2190"} Back
-        </button>
-      )}
+      <button
+        onClick={() => {
+          playClick();
+          onBack();
+        }}
+        style={{
+          padding: "8px 24px",
+          fontSize: 14,
+          fontWeight: 600,
+          fontFamily: "'Fredoka', sans-serif",
+          background: "rgba(255,255,255,0.15)",
+          color: "#fff",
+          border: "1px solid rgba(255,255,255,0.3)",
+          borderRadius: 30,
+          cursor: "pointer",
+        }}
+      >
+        {"\u2190"} Back
+      </button>
     </div>
   );
 }
@@ -813,6 +811,7 @@ export default function KindEmojisBattle() {
   const [selectingPlayer, setSelectingPlayer] = useState(1);
   const [levelWinner, setLevelWinner] = useState(null);
   const [prevTimeLeft, setPrevTimeLeft] = useState(TURN_TIME);
+  const [vsComputer, setVsComputer] = useState(false);
 
   const animFrameRef = useRef(null);
   const emojisRef = useRef([]);
@@ -903,8 +902,64 @@ export default function KindEmojisBattle() {
     emojisRef.current = ne;
     setGameState("playing");
   };
-  const startGame = () => {
+
+  // AI auto-play when it's the computer's turn
+  useEffect(() => {
+    if (
+      !vsComputer ||
+      currentPlayer !== 2 ||
+      gameState !== "playing" ||
+      turnEndedRef.current
+    )
+      return;
+    // AI picks 3 emojis with slight delay for drama
+    const aiPick = () => {
+      const available = emojisRef.current;
+      if (!available.length) return;
+      // AI strategy: 70% chance to pick kind, avoids mean
+      const kindOnes = available.filter((e) => e.type === "kind");
+      const neutralOnes = available.filter((e) => e.type === "neutral");
+      const meanOnes = available.filter((e) => e.type === "mean");
+      const picks = [];
+      for (let i = 0; i < 3; i++) {
+        const roll = Math.random();
+        let pool;
+        if (roll < 0.7 && kindOnes.length > 0) pool = kindOnes;
+        else if (roll < 0.9 && neutralOnes.length > 0) pool = neutralOnes;
+        else pool = [...kindOnes, ...neutralOnes, ...meanOnes];
+        if (pool.length === 0) pool = available;
+        const pick = pool[Math.floor(Math.random() * pool.length)];
+        if (pick && !picks.includes(pick.id)) picks.push(pick.id);
+      }
+      // Simulate clicking with delays
+      let delay = 600;
+      picks.forEach((pid, i) => {
+        setTimeout(
+          () => {
+            if (turnEndedRef.current) return;
+            const newSel = [...selectedRef.current, pid];
+            setSelected(newSel);
+            selectedRef.current = newSel;
+            const e = emojisRef.current.find((em) => em.id === pid);
+            if (e) {
+              if (e.type === "kind") playKind();
+              else if (e.type === "mean") playMean();
+              else playNeutral();
+            }
+            if (newSel.length >= 3) {
+              endTurn(newSel);
+            }
+          },
+          delay * (i + 1),
+        );
+      });
+    };
+    const t = setTimeout(aiPick, 800);
+    return () => clearTimeout(t);
+  }, [vsComputer, currentPlayer, gameState, endTurn]);
+  const startGame = (computer = false) => {
     playClick();
+    setVsComputer(computer);
     setSelectingPlayer(1);
     setP1Info(null);
     setP2Info(null);
@@ -913,7 +968,31 @@ export default function KindEmojisBattle() {
   const handleCharSelect = (info) => {
     if (selectingPlayer === 1) {
       setP1Info(info);
-      setSelectingPlayer(2);
+      if (vsComputer) {
+        // Auto-create robot opponent
+        const robotConfig = {
+          skinTone: "#A0A0A0",
+          hairStyle: "buzz",
+          hairColor: "#3498DB",
+          outfitStyle: "astronaut",
+          outfitColor: "#3498DB",
+          accessory: "sunglasses",
+          name: "Robo",
+        };
+        setP2Info({ config: robotConfig, color: "#3498DB", isToddler: false });
+        setCurrentLevel(0);
+        setCurrentPlayer(1);
+        setP1Scores(0);
+        setP2Scores(0);
+        setP1LevelsWon(0);
+        setP2LevelsWon(0);
+        setLevelWinner(null);
+        setPaused(false);
+        playGameStart();
+        setTimeout(() => initTurn(0), 50);
+      } else {
+        setSelectingPlayer(2);
+      }
     } else {
       setP2Info(info);
       setCurrentLevel(0);
@@ -1001,6 +1080,7 @@ export default function KindEmojisBattle() {
   const handleEmojiClick = useCallback(
     (id) => {
       if (turnEndedRef.current || paused) return;
+      if (vsComputer && currentPlayer === 2) return;
       if (selectedRef.current.length >= 3 || selectedRef.current.includes(id))
         return;
       const emoji = emojisRef.current.find((e) => e.id === id);
@@ -1070,6 +1150,17 @@ export default function KindEmojisBattle() {
     setLevelWinner(null);
     initTurn(nl);
   };
+  // Auto-advance turn result when it's about to be computer's turn
+  useEffect(() => {
+    if (!vsComputer || gameState !== "turnResult") return;
+    // If P1 just played, next is computer - auto advance
+    if (currentPlayer === 1) {
+      const t = setTimeout(() => nextTurn(), 1500);
+      return () => clearTimeout(t);
+    }
+    // If computer just played, let the human read and tap next
+  }, [vsComputer, gameState, currentPlayer]);
+
   const renderChar = (info, size, cel, cry) => {
     if (!info) return null;
     return (
@@ -1232,7 +1323,7 @@ export default function KindEmojisBattle() {
           earn points, mean ones lose points. First to 10 wins!
         </div>
         <button
-          onClick={startGame}
+          onClick={() => startGame(false)}
           style={{
             padding: "14px 40px",
             fontSize: 20,
@@ -1245,9 +1336,28 @@ export default function KindEmojisBattle() {
             cursor: "pointer",
             boxShadow: "0 8px 30px rgba(255,105,180,0.5)",
             zIndex: 2,
+            marginBottom: 12,
           }}
         >
-          Play! 🎮
+          2 Players 🎮
+        </button>
+        <button
+          onClick={() => startGame(true)}
+          style={{
+            padding: "12px 36px",
+            fontSize: 18,
+            fontWeight: 700,
+            fontFamily: "'Fredoka', sans-serif",
+            background: "linear-gradient(135deg, #3498DB, #2980B9)",
+            color: "#fff",
+            border: "3px solid rgba(255,255,255,0.4)",
+            borderRadius: 50,
+            cursor: "pointer",
+            boxShadow: "0 8px 30px rgba(52,152,219,0.4)",
+            zIndex: 2,
+          }}
+        >
+          vs Computer 🤖
         </button>
       </div>
     );
@@ -1659,7 +1769,9 @@ export default function KindEmojisBattle() {
               textShadow: `0 0 15px ${playerColor}60`,
             }}
           >
-            {playerName}'s Turn
+            {vsComputer && currentPlayer === 2
+              ? "Robo is thinking..."
+              : `${playerName}'s Turn`}
           </div>
           {gameState === "playing" && (
             <TimerBar timeLeft={timeLeft} maxTime={TURN_TIME} />
