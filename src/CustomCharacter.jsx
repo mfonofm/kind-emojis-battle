@@ -18,6 +18,8 @@ export const HAIR_COLORS = [
   { id: "auburn", hex: "#8B3A1A", name: "Auburn" },
   { id: "ginger", hex: "#C44B1A", name: "Ginger" },
   { id: "blonde", hex: "#D4A845", name: "Blonde" },
+  { id: "grey", hex: "#888888", name: "Grey" },
+  { id: "white", hex: "#E8E8E8", name: "White" },
   { id: "rainbow", hex: "rainbow", name: "Rainbow" },
   { id: "emerald", hex: "#2ECC71", name: "Emerald" },
   { id: "blue", hex: "#3498DB", name: "Blue" },
@@ -35,7 +37,8 @@ export const HAIR_STYLES = [
   { id: "straight", name: "Straight" },
   { id: "afro", name: "Afro" },
   { id: "bun", name: "Bun" },
-  { id: "buzz", name: "Buzz Cut" },
+  { id: "short", name: "Short" },
+  { id: "bald", name: "Bald" },
 ];
 
 export const OUTFIT_STYLES = [
@@ -396,7 +399,7 @@ function HairBun({ color, isRainbow }) {
   );
 }
 
-function HairBuzz({ color, isRainbow }) {
+function HairShort({ color, isRainbow }) {
   const [c1, c2] = hairColors(color, isRainbow);
   return (
     <>
@@ -456,8 +459,10 @@ function renderHair(style, color) {
       return null;
     case "bun":
       return <HairBun color={c} isRainbow={isRainbow} />;
-    case "buzz":
-      return <HairBuzz color={c} isRainbow={isRainbow} />;
+    case "short":
+      return <HairShort color={c} isRainbow={isRainbow} />;
+    case "bald":
+      return null;
     default:
       return <HairPuffs color={c} isRainbow={isRainbow} />;
   }

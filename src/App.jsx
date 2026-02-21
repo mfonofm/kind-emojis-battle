@@ -307,7 +307,7 @@ const FONT_LINK =
   "https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap";
 
 // ========== Character Creator ==========
-function CharacterCreator({ onDone, onBack }) {
+function CharacterCreator({ onDone, onBack, playerNum = 1 }) {
   const [config, setConfig] = useState({ ...DEFAULT_CONFIG });
   const [step, setStep] = useState(0);
   const [nameInput, setNameInput] = useState("");
@@ -358,7 +358,7 @@ function CharacterCreator({ onDone, onBack }) {
   const next = () => {
     playClick();
     if (step < steps.length - 1) setStep(step + 1);
-    else onDone({ ...config, name: nameInput.trim() || "Player" });
+    else onDone({ ...config, name: nameInput.trim() || `Player ${playerNum}` });
   };
   const prev = () => {
     playClick();
@@ -628,6 +628,7 @@ function CharSelectScreen({ playerNum, takenConfig, onSelect, onBack }) {
   if (effectiveMode === "create")
     return (
       <CharacterCreator
+        playerNum={playerNum}
         onDone={(cfg) => {
           const newChar = {
             id: "custom_" + Date.now(),
@@ -698,32 +699,24 @@ function CharSelectScreen({ playerNum, takenConfig, onSelect, onBack }) {
           }}
         >
           {allChars.map((p) => {
-            const taken = takenConfig && takenConfig.name === p.name;
             return (
               <div
                 key={p.id}
                 onClick={() => {
-                  if (!taken) {
-                    playSelect();
-                    onSelect({
-                      config: p.config,
-                      color: p.color,
-                      isToddler: p.isToddler,
-                    });
-                  }
+                  playSelect();
+                  onSelect({
+                    config: p.config,
+                    color: p.color,
+                    isToddler: p.isToddler,
+                  });
                 }}
                 style={{
                   textAlign: "center",
                   padding: "12px 10px",
                   borderRadius: 20,
-                  background: taken
-                    ? "rgba(255,255,255,0.05)"
-                    : "rgba(255,255,255,0.12)",
-                  border: taken
-                    ? "2px solid rgba(255,255,255,0.1)"
-                    : `2px solid ${p.color}60`,
-                  cursor: taken ? "not-allowed" : "pointer",
-                  opacity: taken ? 0.35 : 1,
+                  background: "rgba(255,255,255,0.12)",
+                  border: `2px solid ${p.color}60`,
+                  cursor: "pointer",
                   minWidth: 85,
                 }}
               >
@@ -743,11 +736,6 @@ function CharSelectScreen({ playerNum, takenConfig, onSelect, onBack }) {
                 >
                   {p.name}
                 </div>
-                {taken && (
-                  <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 10 }}>
-                    Taken
-                  </div>
-                )}
               </div>
             );
           })}
@@ -978,7 +966,7 @@ export default function KindEmojisBattle() {
         // Auto-create robot opponent
         const robotConfig = {
           skinTone: "#A0A0A0",
-          hairStyle: "buzz",
+          hairStyle: "short",
           hairColor: "#3498DB",
           outfitStyle: "robot",
           outfitColor: "#3498DB",
@@ -1378,6 +1366,12 @@ export default function KindEmojisBattle() {
   // ===== GAME WIN =====
   if (gameState === "gameWin") {
     const w = levelWinner;
+    const finalP1 = p1LevelsWon + (w === 1 ? 1 : 0);
+    const finalP2 = p2LevelsWon + (w === 2 ? 1 : 0);
+    const overallWinner =
+      finalP1 > finalP2 ? 1 : finalP2 > finalP1 ? 2 : "draw";
+    const winnerName =
+      overallWinner === 1 ? p1Name : overallWinner === 2 ? p2Name : null;
     return (
       <div
         style={{
@@ -1425,7 +1419,12 @@ export default function KindEmojisBattle() {
         </div>
         <div style={{ display: "flex", gap: 30, margin: "20px 0", zIndex: 2 }}>
           <div style={{ textAlign: "center" }}>
-            {renderChar(p1Info, 90, w === 1 || w === "draw", w === 2)}
+            {renderChar(
+              p1Info,
+              90,
+              overallWinner === 1 || overallWinner === "draw",
+              overallWinner === 2,
+            )}
             <div
               style={{
                 color: "#fff",
@@ -1437,11 +1436,16 @@ export default function KindEmojisBattle() {
               {p1Name}
             </div>
             <div style={{ color: "#FFD700", fontWeight: 700, fontSize: 20 }}>
-              {p1LevelsWon + (w === 1 ? 1 : 0)} 🌟
+              {finalP1} 🌟
             </div>
           </div>
           <div style={{ textAlign: "center" }}>
-            {renderChar(p2Info, 90, w === 2 || w === "draw", w === 1)}
+            {renderChar(
+              p2Info,
+              90,
+              overallWinner === 2 || overallWinner === "draw",
+              overallWinner === 1,
+            )}
             <div
               style={{
                 color: "#fff",
@@ -1453,7 +1457,7 @@ export default function KindEmojisBattle() {
               {p2Name}
             </div>
             <div style={{ color: "#FFD700", fontWeight: 700, fontSize: 20 }}>
-              {p2LevelsWon + (w === 2 ? 1 : 0)} 🌟
+              {finalP2} 🌟
             </div>
           </div>
         </div>
@@ -1468,9 +1472,9 @@ export default function KindEmojisBattle() {
             maxWidth: 320,
           }}
         >
-          {w === "draw"
+          {overallWinner === "draw"
             ? "It's a draw! Both players are amazing! 🤝"
-            : "Both players spread kindness! 💕"}
+            : `${winnerName} wins ${finalP1 > finalP2 ? finalP1 : finalP2}-${finalP1 > finalP2 ? finalP2 : finalP1}! 🎉`}
         </div>
         <button
           onClick={() => {
