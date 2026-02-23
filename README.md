@@ -1,7 +1,7 @@
 # Kind Emojis Battle 🎮
 
 <p align="center">
-  <img src="./assets/kib-gameplay1.gif" width="300" alt="Kind Emojis Battle Gameplay" />
+  <img src="./assets/keb-gameplay1.gif" width="300" alt="Kind Emojis Battle Gameplay" />
 </p>
 
 A 1–2 player browser game about spreading kindness.
