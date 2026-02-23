@@ -52,7 +52,7 @@ const LEVELS = [
     particles: ["🐚", "🌊"],
   },
   {
-    name: "Playground",
+    name: "The Funfair",
     emoji: "🎠",
     bg: "linear-gradient(180deg, #87CEEB 0%, #b3d9f7 40%, #f5e6d0 70%, #e8d5b7 100%)",
     wallColor: "#FF7043",
