@@ -783,8 +783,18 @@ function CharSelectScreen({ playerNum, takenConfig, onSelect, onBack }) {
             color: cfg.outfitColor === "#FFFFFF" ? "#FF69B4" : cfg.outfitColor,
             isToddler: false,
           };
-          setCustomChars((prev) => [...prev, newChar]);
-          setMode("choose");
+          if (allChars.length === 0) {
+            // First character created — auto-select it
+            setCustomChars([newChar]);
+            onSelect({
+              config: newChar.config,
+              color: newChar.color,
+              isToddler: newChar.isToddler,
+            });
+          } else {
+            setCustomChars((prev) => [...prev, newChar]);
+            setMode("choose");
+          }
         }}
         onBack={() => {
           if (allChars.length > 0) setMode("choose");
