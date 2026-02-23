@@ -1,16 +1,22 @@
 # Kind Emojis Battle 🎮
 
+<p align="center">
+  <img src="./assets/kib-gameplay1.gif" width="400" alt="Kind Emojis Battle Gameplay" />
+</p>
+
 A 1–2 player browser game about spreading kindness.
 
-Built with my daughter, this playful emoji battle lets you create your own character and compete by throwing emojis over the wall.
+Built with my daughter, with a little help from AI, this playful emoji battle lets you create your own character and throw emojis over the wall.
 
-Play against the computer or challenge another player locally. First to 10 points wins each level. Complete all 5 levels to win the game.
+Play against the computer or challenge another player locally. First to 10 points wins the level. Win the most levels to win the game.
+
+**Kindness wins. 💕**
 
 The game is built as a Progressive Web App (PWA), so it can be installed and played like a native app.
 
-## Live Demo
+## Play the Game
 
-[kindemojisbattle.com](https://www.kindemojisbattle.com)
+https://www.kindemojisbattle.com
 
 ## How It Works
 
@@ -39,11 +45,11 @@ Choose carefully. Small choices add up.
 
 - Installable on mobile and desktop
 - Fast loading
-- Works offline after first load
+- Works offline after the first visit
 
 ## Why We Built It
 
-We wanted to build something fun together that encourages positive choices, creativity, and turn-taking.
+We wanted to build something fun together that encourages positive choices, creativity and turn-taking.
 
 ## Tech Stack
 
