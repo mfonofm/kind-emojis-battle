@@ -695,15 +695,6 @@ function CharacterCreator({ onDone, onBack, playerNum = 1 }) {
           >
             {spinning ? "Spinning..." : "🎰 Spin!"}
           </button>
-          <div
-            style={{
-              fontSize: 11,
-              color: "rgba(255,255,255,0.5)",
-              marginTop: 4,
-            }}
-          >
-            Spin for a name or type your own below
-          </div>
           <input
             value={nameInput}
             onChange={(e) => setNameInput(e.target.value.slice(0, 12))}
@@ -722,6 +713,15 @@ function CharacterCreator({ onDone, onBack, playerNum = 1 }) {
               marginTop: 8,
             }}
           />
+          <div
+            style={{
+              fontSize: 11,
+              color: "rgba(255,255,255,0.45)",
+              marginTop: 8,
+            }}
+          >
+            Happy with your name? Tap <strong>Let's Go!</strong> below
+          </div>
         </div>
       )}
       <div style={{ display: "flex", gap: 12 }}>
@@ -755,7 +755,7 @@ function CharacterCreator({ onDone, onBack, playerNum = 1 }) {
             cursor: "pointer",
           }}
         >
-          {step === steps.length - 1 ? "Done ✓" : "Next →"}
+          {step === steps.length - 1 ? "Let's Go! 🎮" : "Next →"}
         </button>
       </div>
     </div>
@@ -783,18 +783,12 @@ function CharSelectScreen({ playerNum, takenConfig, onSelect, onBack }) {
             color: cfg.outfitColor === "#FFFFFF" ? "#FF69B4" : cfg.outfitColor,
             isToddler: false,
           };
-          if (allChars.length === 0) {
-            // First character created — auto-select it
-            setCustomChars([newChar]);
-            onSelect({
-              config: newChar.config,
-              color: newChar.color,
-              isToddler: newChar.isToddler,
-            });
-          } else {
-            setCustomChars((prev) => [...prev, newChar]);
-            setMode("choose");
-          }
+          setCustomChars((prev) => [...prev, newChar]);
+          onSelect({
+            config: newChar.config,
+            color: newChar.color,
+            isToddler: newChar.isToddler,
+          });
         }}
         onBack={() => {
           if (allChars.length > 0) setMode("choose");
@@ -1334,6 +1328,7 @@ export default function KindEmojisBattle() {
   if (gameState === "charSelect") {
     return (
       <CharSelectScreen
+        key={selectingPlayer}
         playerNum={selectingPlayer}
         takenConfig={selectingPlayer === 2 ? p1Info?.config : null}
         onSelect={handleCharSelect}
@@ -1475,8 +1470,18 @@ export default function KindEmojisBattle() {
             fontFamily: "'Nunito', sans-serif",
           }}
         >
-          Throw kind emojis over the wall! Pick 3 emojis each turn. Kind ones
-          earn points, mean ones lose points. First to 10 wins!
+          <div>
+            <p>Play with a friend or the computer.</p>
+            <p>Make your character and choose a name.</p>
+
+            <p>Choose 3 emojis each turn.</p>
+
+            <p>Race to 10 points!</p>
+
+            <p>
+              <strong>Kindness wins. 💕</strong>
+            </p>
+          </div>
         </div>
         <button
           onClick={() => startGame(false)}
