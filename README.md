@@ -8,7 +8,7 @@ A 1–2 player browser game about spreading kindness.
 
 Built with my daughter during half-term, and with a little help from AI, this playful emoji battle lets you create your own character and throw emojis over the wall.
 
-Play against the computer or challenge another player locally. First to 10 points wins the level. Win the most levels to win the game.
+Play against the computer or a friend. First to 10 points wins the level. Win the most levels to win the game.
 
 **Kindness wins. 💕**
 
