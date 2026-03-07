@@ -9,13 +9,20 @@ import sfxNeutralEmoji from "./assets/sounds/sfx-neutral-emoji.mp3";
 // Background music
 let currentBg = null;
 
+// Background music - tune volumes per track so they feel balanced
+const BG_TRACKS = {
+  home: { src: sfxBgHome, volume: 0.1 },
+  create: { src: sfxBgCreate, volume: 0.15 },
+  win: { src: sfxBgWin, volume: 0.2 },
+};
+
 export function playBgMusic(track) {
   stopBgMusic();
-  const src = { home: sfxBgHome, create: sfxBgCreate, win: sfxBgWin }[track];
-  if (!src) return;
-  currentBg = new Audio(src);
+  const t = BG_TRACKS[track];
+  if (!t) return;
+  currentBg = new Audio(t.src);
   currentBg.loop = true;
-  currentBg.volume = 0.3;
+  currentBg.volume = t.volume;
   currentBg.play().catch(() => {});
 }
 
@@ -28,7 +35,7 @@ export function stopBgMusic() {
 }
 
 // Sound effects (one-shot)
-function playSfx(src, volume = 0.5) {
+function playSfx(src, volume = 0.3) {
   const a = new Audio(src);
   a.volume = volume;
   a.play().catch(() => {});
@@ -68,15 +75,15 @@ function playTone(
 
 // === GAME SOUNDS ===
 
-// Real sounds
+// Real sounds - tune each volume so they feel balanced
 export function playKind() {
-  playSfx(sfxKindEmoji, 0.5);
+  playSfx(sfxKindEmoji, 0.3);
 }
 export function playMean() {
-  playSfx(sfxBadEmoji, 0.5);
+  playSfx(sfxBadEmoji, 0.3);
 }
 export function playNeutral() {
-  playSfx(sfxNeutralEmoji, 0.4);
+  playSfx(sfxNeutralEmoji, 0.3);
 }
 
 // Placeholder sounds (Web Audio)
