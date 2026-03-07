@@ -20,6 +20,8 @@ import {
   playSelect,
   playGameStart,
   playWhoosh,
+  playBgMusic,
+  stopBgMusic,
 } from "./sounds.js";
 
 const SPEED_MULTIPLIERS = [0.25, 0.4, 0.6, 0.8, 1.0];
@@ -970,6 +972,19 @@ export default function KindEmojisBattle() {
   const playerName = currentInfo?.config?.name || "Player";
   const playerColor = currentInfo?.color || "#FF69B4";
 
+  // Background music based on game state
+  useEffect(() => {
+    if (gameState === "title") {
+      playBgMusic("home");
+    } else if (gameState === "charSelect") {
+      playBgMusic("create");
+    } else if (gameState === "playing") {
+      stopBgMusic();
+    } else if (gameState === "gameWin") {
+      playBgMusic("win");
+    }
+  }, [gameState]);
+
   useEffect(() => {
     selectedRef.current = selected;
   }, [selected]);
@@ -1056,11 +1071,9 @@ export default function KindEmojisBattle() {
       turnEndedRef.current
     )
       return;
-    // AI picks 3 emojis with slight delay for drama
     const aiPick = () => {
       const available = emojisRef.current;
       if (!available.length) return;
-      // AI strategy: 70% chance to pick kind, avoids mean
       const kindOnes = available.filter((e) => e.type === "kind");
       const neutralOnes = available.filter((e) => e.type === "neutral");
       const meanOnes = available.filter((e) => e.type === "mean");
@@ -1075,7 +1088,6 @@ export default function KindEmojisBattle() {
         const pick = pool[Math.floor(Math.random() * pool.length)];
         if (pick && !picks.includes(pick.id)) picks.push(pick.id);
       }
-      // Simulate clicking with delays
       let delay = 600;
       picks.forEach((pid, i) => {
         setTimeout(
@@ -1113,7 +1125,6 @@ export default function KindEmojisBattle() {
     if (selectingPlayer === 1) {
       setP1Info(info);
       if (vsComputer) {
-        // Auto-create robot opponent
         const robotConfig = {
           skinTone: "#A0A0A0",
           hairStyle: "short",
@@ -1137,6 +1148,7 @@ export default function KindEmojisBattle() {
         setP2LevelsWon(0);
         setLevelWinner(null);
         setPaused(false);
+        stopBgMusic();
         playGameStart();
         setTimeout(() => initTurn(0), 50);
       } else {
@@ -1152,12 +1164,14 @@ export default function KindEmojisBattle() {
       setP2LevelsWon(0);
       setLevelWinner(null);
       setPaused(false);
+      stopBgMusic();
       playGameStart();
       setTimeout(() => initTurn(0), 50);
     }
   };
   const endGame = () => {
     playClick();
+    stopBgMusic();
     setPaused(false);
     setGameState("title");
     if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
@@ -1302,12 +1316,10 @@ export default function KindEmojisBattle() {
   // Auto-advance turn result when it's about to be computer's turn
   useEffect(() => {
     if (!vsComputer || gameState !== "turnResult") return;
-    // If P1 just played, next is computer - auto advance
     if (currentPlayer === 1) {
       const t = setTimeout(() => nextTurn(), 1500);
       return () => clearTimeout(t);
     }
-    // If computer just played, let the human read and tap next
   }, [vsComputer, gameState, currentPlayer]);
 
   const renderChar = (info, size, cel, cry) => {
