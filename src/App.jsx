@@ -356,7 +356,13 @@ const NAME_SECOND = [
   "Donut",
 ];
 
-function CharacterCreator({ onDone, onBack, playerNum = 1 }) {
+function CharacterCreator({
+  onDone,
+  onBack,
+  playerNum = 1,
+  soundMuted,
+  toggleMute,
+}) {
   const [config, setConfig] = useState({ ...DEFAULT_CONFIG });
   const [step, setStep] = useState(0);
   const [nameInput, setNameInput] = useState("");
@@ -442,6 +448,28 @@ function CharacterCreator({ onDone, onBack, playerNum = 1 }) {
     >
       <link href={FONT_LINK} rel="stylesheet" />
       <style>{GLOBAL_STYLES}</style>
+      {toggleMute && (
+        <div style={{ alignSelf: "flex-end", marginBottom: 4 }}>
+          <button
+            onClick={toggleMute}
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: "50%",
+              border: "1px solid rgba(255,255,255,0.3)",
+              background: "rgba(0,0,0,0.25)",
+              color: "#fff",
+              fontSize: 16,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {soundMuted ? "🔇" : "🔊"}
+          </button>
+        </div>
+      )}
       <div
         style={{
           fontSize: 13,
@@ -766,7 +794,14 @@ function CharacterCreator({ onDone, onBack, playerNum = 1 }) {
   );
 }
 
-function CharSelectScreen({ playerNum, takenConfig, onSelect, onBack }) {
+function CharSelectScreen({
+  playerNum,
+  takenConfig,
+  onSelect,
+  onBack,
+  soundMuted,
+  toggleMute,
+}) {
   const [mode, setMode] = useState("choose");
   const [customChars, setCustomChars] = useState([]);
 
@@ -779,6 +814,8 @@ function CharSelectScreen({ playerNum, takenConfig, onSelect, onBack }) {
     return (
       <CharacterCreator
         playerNum={playerNum}
+        soundMuted={soundMuted}
+        toggleMute={toggleMute}
         onDone={(cfg) => {
           const newChar = {
             id: "custom_" + Date.now(),
@@ -1371,6 +1408,8 @@ export default function KindEmojisBattle() {
         playerNum={selectingPlayer}
         takenConfig={selectingPlayer === 2 ? p1Info?.config : null}
         onSelect={handleCharSelect}
+        soundMuted={soundMuted}
+        toggleMute={toggleMute}
         onBack={() => {
           playClick();
           if (selectingPlayer === 2) setSelectingPlayer(1);
@@ -1421,7 +1460,7 @@ export default function KindEmojisBattle() {
           </div>
           <div
             style={{
-              fontSize: "clamp(28px, 5vw, 48px)",
+              fontSize: "clamp(36px, 7vw, 64px)",
               fontWeight: 700,
               color: "#FFD700",
               fontFamily: "'Fredoka', sans-serif",
