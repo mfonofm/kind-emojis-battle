@@ -22,6 +22,8 @@ import {
   playWhoosh,
   playBgMusic,
   stopBgMusic,
+  isMuted,
+  setMuted,
 } from "./sounds.js";
 
 const SPEED_MULTIPLIERS = [0.25, 0.4, 0.6, 0.8, 1.0];
@@ -958,6 +960,13 @@ export default function KindEmojisBattle() {
   const [levelWinner, setLevelWinner] = useState(null);
   const [prevTimeLeft, setPrevTimeLeft] = useState(TURN_TIME);
   const [vsComputer, setVsComputer] = useState(false);
+  const [soundMuted, setSoundMuted] = useState(false);
+
+  const toggleMute = () => {
+    const newVal = !soundMuted;
+    setSoundMuted(newVal);
+    setMuted(newVal);
+  };
 
   const animFrameRef = useRef(null);
   const emojisRef = useRef([]);
@@ -1532,6 +1541,24 @@ export default function KindEmojisBattle() {
         >
           vs Computer 🤖
         </button>
+        <button
+          onClick={toggleMute}
+          style={{
+            marginTop: 20,
+            padding: "8px 20px",
+            fontSize: 14,
+            fontWeight: 600,
+            fontFamily: "'Fredoka', sans-serif",
+            background: "rgba(255,255,255,0.1)",
+            color: "rgba(255,255,255,0.7)",
+            border: "1px solid rgba(255,255,255,0.2)",
+            borderRadius: 30,
+            cursor: "pointer",
+            zIndex: 2,
+          }}
+        >
+          {soundMuted ? "🔇 Sound Off" : "🔊 Sound On"}
+        </button>
       </div>
     );
   }
@@ -1977,7 +2004,34 @@ export default function KindEmojisBattle() {
       </div>
 
       {gameState === "playing" && (
-        <div style={{ position: "absolute", top: 8, right: 8, zIndex: 30 }}>
+        <div
+          style={{
+            position: "absolute",
+            top: 8,
+            right: 8,
+            zIndex: 30,
+            display: "flex",
+            gap: 6,
+          }}
+        >
+          <button
+            onClick={toggleMute}
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: "50%",
+              border: "1px solid rgba(255,255,255,0.3)",
+              background: "rgba(0,0,0,0.35)",
+              color: "#fff",
+              fontSize: 16,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {soundMuted ? "🔇" : "🔊"}
+          </button>
           <button
             onClick={togglePause}
             style={{

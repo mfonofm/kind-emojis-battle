@@ -6,8 +6,25 @@ import sfxBgWin from "./assets/sounds/sfx-bg-win.mp3";
 import sfxKindEmoji from "./assets/sounds/sfx-kind-emoji.mp3";
 import sfxNeutralEmoji from "./assets/sounds/sfx-neutral-emoji.mp3";
 
+// Mute state
+let muted = false;
+
+export function isMuted() {
+  return muted;
+}
+
+export function setMuted(val) {
+  muted = val;
+  if (muted && currentBg) {
+    currentBg.pause();
+  } else if (!muted && currentBg) {
+    currentBg.play().catch(() => {});
+  }
+}
+
 // Background music
 let currentBg = null;
+let currentTrackKey = null;
 
 // Background music - tune volumes per track so they feel balanced
 const BG_TRACKS = {
@@ -20,10 +37,11 @@ export function playBgMusic(track) {
   stopBgMusic();
   const t = BG_TRACKS[track];
   if (!t) return;
+  currentTrackKey = track;
   currentBg = new Audio(t.src);
   currentBg.loop = true;
   currentBg.volume = t.volume;
-  currentBg.play().catch(() => {});
+  if (!muted) currentBg.play().catch(() => {});
 }
 
 export function stopBgMusic() {
@@ -32,10 +50,12 @@ export function stopBgMusic() {
     currentBg.currentTime = 0;
     currentBg = null;
   }
+  currentTrackKey = null;
 }
 
 // Sound effects (one-shot)
 function playSfx(src, volume = 0.3) {
+  if (muted) return;
   const a = new Audio(src);
   a.volume = volume;
   a.play().catch(() => {});
@@ -57,6 +77,7 @@ function playTone(
   volume = 0.3,
   rampDown = true,
 ) {
+  if (muted) return;
   try {
     const ctx = getCtx();
     const osc = ctx.createOscillator();
@@ -133,6 +154,7 @@ export function playGameStart() {
 }
 
 export function playWhoosh() {
+  if (muted) return;
   try {
     const ctx = getCtx();
     const osc = ctx.createOscillator();
