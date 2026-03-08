@@ -6,6 +6,41 @@ import sfxBgWin from "./assets/sounds/sfx-bg-win.mp3";
 import sfxKindEmoji from "./assets/sounds/sfx-kind-emoji.mp3";
 import sfxNeutralEmoji from "./assets/sounds/sfx-neutral-emoji.mp3";
 
+// Pre-load SFX so they play instantly on first use
+const sfxCache = {};
+function preloadSfx(src) {
+  if (!sfxCache[src]) {
+    const a = new Audio(src);
+    a.preload = "auto";
+    a.load();
+    sfxCache[src] = true;
+  }
+}
+[sfxKindEmoji, sfxBadEmoji, sfxNeutralEmoji].forEach(preloadSfx);
+
+// Warm up AudioContext on first user interaction
+let audioCtx = null;
+
+function getCtx() {
+  if (!audioCtx)
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+let audioCtxWarmed = false;
+function warmUpAudio() {
+  if (audioCtxWarmed) return;
+  audioCtxWarmed = true;
+  try {
+    const ctx = getCtx();
+    if (ctx.state === "suspended") ctx.resume();
+  } catch (e) {}
+}
+if (typeof window !== "undefined") {
+  window.addEventListener("click", warmUpAudio, { once: true });
+  window.addEventListener("touchstart", warmUpAudio, { once: true });
+}
+
 // Mute state
 let muted = false;
 
@@ -62,13 +97,6 @@ function playSfx(src, volume = 0.3) {
 }
 
 // === Web Audio for remaining placeholder sounds ===
-let audioCtx = null;
-
-function getCtx() {
-  if (!audioCtx)
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  return audioCtx;
-}
 
 function playTone(
   freq,

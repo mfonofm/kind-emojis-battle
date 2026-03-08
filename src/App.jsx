@@ -981,8 +981,26 @@ export default function KindEmojisBattle() {
   const playerName = currentInfo?.config?.name || "Player";
   const playerColor = currentInfo?.color || "#FF69B4";
 
-  // Background music based on game state
+  // Track whether user has interacted (unlocks audio)
+  const [audioUnlocked, setAudioUnlocked] = useState(false);
+
   useEffect(() => {
+    const unlock = () => {
+      setAudioUnlocked(true);
+      window.removeEventListener("click", unlock);
+      window.removeEventListener("touchstart", unlock);
+    };
+    window.addEventListener("click", unlock);
+    window.addEventListener("touchstart", unlock);
+    return () => {
+      window.removeEventListener("click", unlock);
+      window.removeEventListener("touchstart", unlock);
+    };
+  }, []);
+
+  // Background music based on game state - only after user interaction
+  useEffect(() => {
+    if (!audioUnlocked) return;
     if (gameState === "title") {
       playBgMusic("home");
     } else if (gameState === "charSelect") {
@@ -992,7 +1010,7 @@ export default function KindEmojisBattle() {
     } else if (gameState === "gameWin") {
       playBgMusic("win");
     }
-  }, [gameState]);
+  }, [gameState, audioUnlocked]);
 
   useEffect(() => {
     selectedRef.current = selected;
