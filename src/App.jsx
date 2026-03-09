@@ -1623,8 +1623,8 @@ export default function KindEmojisBattle() {
   // ===== GAME WIN =====
   if (gameState === "gameWin") {
     const w = levelWinner;
-    const finalP1 = p1LevelsWon + (w === 1 ? 1 : 0);
-    const finalP2 = p2LevelsWon + (w === 2 ? 1 : 0);
+    const finalP1 = p1LevelsWon;
+    const finalP2 = p2LevelsWon;
     const overallWinner =
       finalP1 > finalP2 ? 1 : finalP2 > finalP1 ? 2 : "draw";
     const winnerName =
