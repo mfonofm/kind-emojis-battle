@@ -1350,6 +1350,8 @@ export default function KindEmojisBattle() {
         p2Hit = p2Scores >= WIN_SCORE;
       if (p1Hit && p2Hit) {
         setLevelWinner("draw");
+        setP1LevelsWon((p) => p + 1);
+        setP2LevelsWon((p) => p + 1);
         playDraw();
       } else if (p1Hit) {
         setLevelWinner(1);
